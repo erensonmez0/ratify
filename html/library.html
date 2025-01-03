@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Album Library</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Ratify</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="search.html"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+                <li><a href="library.html"><i class="fa-solid fa-record-vinyl"></i> Album Library</a></li>
+                <li><a href="surprise.html"><i class="fa-solid fa-wand-magic-sparkles"></i> Surprise me</a></li>
+                <li><a href="list.html"><i class="fa-solid fa-list"></i> My List</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Album Library</h2>
+        <h3>Reviewed Albums:</h3>
+        <div id="libraryList"></div>
+    </main>
+    <div id="deletePopup" class="popup">
+        <div class="popup-content">
+            <span id="closeDeletePopup" class="close">&times;</span>
+            <h2>Delete Review</h2>
+            <p>Are you sure you want to delete this review?</p>
+            <button id="confirmDelete">Yes</button>
+            <button id="cancelDelete">No</button>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Ratify</p>
+    </footer>
+    <script src="../js/scripts.js"></script>
+</body>
+</html>

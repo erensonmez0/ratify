@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <h1>Ratify</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+                <li><a href="search.html"><i class="fa-solid fa-magnifying-glass"></i> Search</a></li>
+                <li><a href="library.html"><i class="fa-solid fa-record-vinyl"></i> Album Library</a></li>
+                <li><a href="surprise.html"><i class="fa-solid fa-wand-magic-sparkles"></i> Surprise me</a></li>
+                <li><a href="list.html"><i class="fa-solid fa-list"></i> My List</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <h2>Search Albums</h2>
+        <div class="search-container">
+            <input type="text" id="albumSearch" placeholder="Search for an album..." />
+            <button id="searchButton">Search</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </main>
+
+    <div id="reviewPopup" class="review-popup">
+        <div class="review-popup-content">
+            <span class="close-button" onclick="closeReviewPopup()">&times;</span>
+            <img id="albumCover" src="" alt="I listened to.." class="album-cover">
+            <h2 id="albumTitle">Album Title</h2>
+            <p id="albumYear">Release Year</p>
+            <div class="rating-container">
+                <span class="star" onclick="setRating(1)">&#9733;</span>
+                <span class="star" onclick="setRating(2)">&#9733;</span>
+                <span class="star" onclick="setRating(3)">&#9733;</span>
+                <span class="star" onclick="setRating(4)">&#9733;</span>
+                <span class="star" onclick="setRating(5)">&#9733;</span>
+            </div>
+            <textarea id="reviewText" placeholder="Write your review here..."></textarea>
+            <button onclick="saveReview()">Save</button>
+        </div>
+    </div>
+    <div id="toast" class="toast"></div>
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Ratify</p>
+    </footer>
+    <script src="../js/scripts.js"></script>
+</body>
+</html>
