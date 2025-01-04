@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../VinylFavicon.png">
     <title>My List</title>
     <link rel="stylesheet" href="../css/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
@@ -22,9 +23,23 @@
     </header>
     <main>
         <h2>My List</h2>
-        <h3>Saved Albums:</h3>
+        <h3>Your Listening List</h3>
+        <p>Manage your list, tap on an album to remove it if you've listened to it or no longer want to keep it.</p>
         <div id="savedList" class="album-list"></div>
     </main>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage">Do you want to remove this album from the list?</p>
+            <div class="modal-buttons">
+                <button id="confirmButton" class="confirm">Yes</button>
+                <button id="cancelButton" class="cancel">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
     <footer>
         <p>© 2025 Ratify</p>
     </footer>

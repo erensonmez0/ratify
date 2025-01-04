@@ -1,3 +1,120 @@
+//The Predefined top 100 Albums of all time for the "Surprise Me" feature.
+const albumNames = [
+    "Thriller",
+    "The Dark Side of the Moon",
+    "Rumours",
+    "Abbey Road",
+    "Back in Black",
+    "Songs in the Key of Life",
+    "good Kid, M.A.A.D City",
+    "The Miseducation of Lauryn Hill",
+    "Purple Rain (Deluxe Expanded Edition)",
+    "Blonde",
+    "Back to Black",
+    "Nevermind",
+    "Lemonade",
+    "OK Computer",
+    "Highway 61 Revisited",
+    "21 Adele",
+    "Blue Joni Mitchell",
+    "What's Going On",
+    "The Chronic",
+    "Absolution",
+    "Origin of Symmetry",
+    "The Chronic Dr. Dre",
+    "Pet Sounds",
+    "Revolver",
+    "Born to Run",
+    "Discovery",
+    "Ziggy Stardust",
+    "Kind of Blue",
+    "My Beautiful dark twisted fantasy",
+    "Led Zeppelin II",
+    "The Low End Theory",
+    "When we fall asleep, where do we go?",
+    "Jagged Little Pill",
+    "Ready to Die",
+    "Kid A",
+    "It Takes a Nation of Millions to Hold Us Back",
+    "London Calling",
+    "Enter the Wu-Tang (36 Chambers)",
+    "Tapestry",
+    "Illmatic",
+    "I never Loved a Man the Way I Loved You",
+    "Aquemini",
+    "Control Janet Jackson",
+    "Remain in Light",
+    "Innervisions Stevie Wonder",
+    "Homogenic Björk",
+    "Exodus Bob Marley",
+    "Drake Take Care",
+    "Paul's Boutique",
+    "The Joshua Tree U2",
+    "Hounds of Love Kate Bush",
+    "Sign O' the Times Prince",
+    "Appetite for Destruction",
+    "Exile on Main St.",
+    "A Love Supreme John Coltrane",
+    "ANTI Rihanna",
+    "Disintegration The Cure",
+    "Voodoo D'Angelo",
+    "(What's the Story) Morning Glory",
+    "AM",
+    "The Velvet Underground & Nico",
+    "Love Deluxe Sade",
+    "All Eyez on Me",
+    "Are you Experienced",
+    "Baduizm",
+    "3 Feet High and Rising",
+    "The Queen is Dead",
+    "Dummy Portishead",
+    "Is this It the Strokes",
+    "Master of Puppets",
+    "Straight Outta Compton",
+    "Trans-Europe Express",
+    "SOS SZA",
+    "Aja Steely Dan",
+    "The Downward Spiral",
+    "Supa Dupa Fly Missy Elliott",
+    "Like A Prayer Madonna",
+    "Goodbye Yellow Brick Road",
+    "Norman F*****g Rockwell!",
+    "The Marshall Mathers LP",
+    "After the Gold Rush",
+    "Get Rich or Die Tryin'",
+    "Horses Patti Smith",
+    "My Life Mary J. Blige",
+    "Blue Lines",
+    "I put a Spell on You",
+    "The Fame Monster",
+    "Listen Without Prejudice, Vol. 1",
+    "Flower Boy",
+    "Pure Heroine",
+    "Rage Against the Machine",
+    "ASTROWORLD",
+    "Hotel California the Eagles",
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded and parsed");
+    
+    const surpriseMeButton = document.getElementById("surpriseMeButton");
+    if (!surpriseMeButton) {
+        console.error("Surprise Me button not found");
+        return;
+    }
+
+    surpriseMeButton.addEventListener("click", surpriseMe);
+});
+
+const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
+savedAlbums.forEach(album => {
+    if (!album.dateAdded) {
+        album.dateAdded = new Date().toISOString(); // Assign a default timestamp
+    }
+});
+localStorage.setItem("savedAlbums", JSON.stringify(savedAlbums));
+
 async function getAccessToken() {
     const clientId = '269e493e4c8142f6974ad609b988648d';
     const clientSecret = 'bacc49ad2afd4b2f883826e0aba08904';
@@ -79,13 +196,15 @@ function addToMyList(albumName, artistName, albumCover) {
     const albumExists = savedAlbums.some(album => album.albumName === albumName);
 
     if (!albumExists) {
-        savedAlbums.push({ albumName, artistName, albumCover });
+        savedAlbums.push({ albumName, artistName, albumCover, dateAdded: new Date().toISOString() });
         localStorage.setItem("savedAlbums", JSON.stringify(savedAlbums));
-        alert(`${albumName} by ${artistName} has been added to your list!`);
+        showToast(`${albumName} by ${artistName} has been added to your list!`);
     } else {
-        alert(`${albumName} is already in your list!`);
+        showToast(`${albumName} is already in your list!`);
     }
 }
+
+
 
 function displaySavedAlbums() {
     const savedList = document.getElementById("savedList");
@@ -98,32 +217,85 @@ function displaySavedAlbums() {
         return;
     }
 
-    savedAlbums.forEach(album => {
+    // Sort albums by dateAdded (newest first)
+    savedAlbums.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+
+    savedAlbums.forEach((album, index) => {
         const albumDiv = document.createElement("div");
         albumDiv.classList.add("album-item");
-        albumDiv.innerHTML = `
-            <img src="${album.albumCover}" alt="${album.albumName}" class="album-cover" />
-            <p><strong>${album.albumName}</strong> by ${album.artistName}</p>
-        `;
+
+        // Check if the album is marked as listened and apply visual feedback
+        if (album.listened) {
+            albumDiv.style.opacity = "0.5"; // Dim the album visually
+            albumDiv.innerHTML = `
+                <img src="${album.albumCover}" alt="${album.albumName}" class="album-cover" />
+                <div class="album-details">
+                    <h3>${album.albumName}</h3>
+                    <p>by ${album.artistName}</p>
+                    <p><em>Listened</em></p>
+                    <p>Date Added: ${new Date(album.dateAdded).toLocaleDateString()}</p>
+                </div>
+            `;
+        } else {
+            albumDiv.innerHTML = `
+                <img src="${album.albumCover}" alt="${album.albumName}" class="album-cover" />
+                <div class="album-details">
+                    <h3>${album.albumName}</h3>
+                    <p>by ${album.artistName}</p>
+                    <p>Date Added: ${new Date(album.dateAdded).toLocaleDateString()}</p>
+                </div>
+            `;
+        }
+
+        // Add click event listener for removal or marking as listened
+        albumDiv.addEventListener("click", () => openAlbumOptions(index));
+
         savedList.appendChild(albumDiv);
     });
 }
 
+
 document.addEventListener("DOMContentLoaded", displaySavedAlbums);
 
-function loadMyList() {
-    const savedAlbums = JSON.parse(localStorage.getItem("myList")) || [];
-    const listContainer = document.getElementById("savedList");
-    listContainer.innerHTML = "";
 
-    savedAlbums.forEach((album) => {
-        const listItem = document.createElement("li");
-        listItem.textContent = `${album.albumName} by ${album.artistName}`;
-        listContainer.appendChild(listItem);
-    });
+function openAlbumOptions(index) {
+    const modal = document.getElementById("confirmationModal");
+    const confirmButton = document.getElementById("confirmButton");
+    const cancelButton = document.getElementById("cancelButton");
+
+    // Show the modal
+    modal.style.display = "flex";
+
+    // Handle "Yes" button click
+    confirmButton.onclick = () => {
+        removeAlbum(index); // Remove the album
+        modal.style.display = "none"; // Close the modal
+        showToast("Album removed successfully!");
+    };
+
+    // Handle "No" button click
+    cancelButton.onclick = () => {
+        modal.style.display = "none"; // Close the modal
+    };
+
+    // Close the modal when clicking outside of it
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
 }
 
-document.addEventListener("DOMContentLoaded", loadMyList);
+
+
+
+function removeAlbum(index) {
+    const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
+    savedAlbums.splice(index, 1); // Remove the selected album
+    localStorage.setItem("savedAlbums", JSON.stringify(savedAlbums));
+    displaySavedAlbums(); // Refresh the list
+    showToast("Album removed successfully!");
+}
 
 let currentAlbum = null;
 
@@ -317,3 +489,61 @@ function showToast(message) {
         toast.classList.remove("show");
     }, 3000);
 }
+
+async function surpriseMe() {
+    // Pick a random album from the list
+    const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
+
+    // Fetch album details using the Spotify API
+    const albumDetails = await fetchAlbumDetails(randomAlbumName);
+
+    // Update the UI
+    const recommendationContainer = document.getElementById("recommendation");
+    if (albumDetails) {
+        recommendationContainer.innerHTML = `
+            <div class="album-recommendation">
+                <img src="${albumDetails.cover}" alt="${albumDetails.name}" />
+                <h3>${albumDetails.name}</h3>
+                <p>by ${albumDetails.artist}</p>
+                <p>Release Date: ${new Date(albumDetails.releaseDate).toLocaleDateString()}</p>
+            </div>
+        `;
+    } else {
+        recommendationContainer.innerHTML = "<p>Sorry, no recommendation could be found at this time.</p>";
+    }
+}
+
+async function fetchAlbumDetails(albumName) {
+    const token = await getAccessToken();
+
+    try {
+        const response = await fetch(
+            `https://api.spotify.com/v1/search?q=${encodeURIComponent(albumName)}&type=album&limit=1`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        const data = await response.json();
+
+        if (data.albums && data.albums.items.length > 0) {
+            const album = data.albums.items[0];
+            return {
+                name: album.name,
+                artist: album.artists[0].name,
+                cover: album.images[0]?.url,
+                releaseDate: album.release_date,
+            };
+        } else {
+            console.error("No album found for:", albumName);
+            return null;
+        }
+    } catch (error) {
+        console.error("Error fetching album details:", error);
+        return null;
+    }
+}
+
+document.getElementById("surpriseMeButton").addEventListener("click", surpriseMe);
