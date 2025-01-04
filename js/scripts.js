@@ -97,59 +97,60 @@ const albumNames = [
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed");
-    console.log("User Agent:", navigator.userAgent);
 
     const surpriseMeButton = document.getElementById("surpriseMeButton");
     const instruction = document.getElementById("instruction");
+
     if (!instruction) console.error("Instruction element not found.");
     if (!surpriseMeButton) console.error("Surprise Me button not found.");
 
-    // Detect if it's a mobile device
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
     console.log("Is Mobile Device:", isMobile);
 
-    if (isMobile && window.DeviceMotionEvent) {
+    if (isMobile && typeof DeviceMotionEvent !== "undefined") {
         console.log("DeviceMotionEvent supported.");
-        instruction.textContent = "Shake your device to discover a new album!";
-        surpriseMeButton.style.display = "none"; // Hide the button on mobile devices
+        instruction.textContent = "Tap the button to allow access, then shake your device!";
+        surpriseMeButton.style.display = "inline-block"; // Show the button for permission
 
-        let lastShakeTime = 0;
-
-        // Check for iOS-specific motion permission
-        if (typeof DeviceMotionEvent.requestPermission === "function") {
-            DeviceMotionEvent.requestPermission()
-                .then((response) => {
-                    if (response === "granted") {
-                        console.log("Motion permission granted!");
-                        enableShakeDetection();
-                    } else {
-                        console.error("Motion permission denied by user.");
+        surpriseMeButton.addEventListener("click", () => {
+            if (typeof DeviceMotionEvent.requestPermission === "function") {
+                DeviceMotionEvent.requestPermission()
+                    .then((response) => {
+                        if (response === "granted") {
+                            console.log("Motion permission granted!");
+                            enableShakeDetection();
+                            instruction.textContent = "Now shake your device to discover a new album!";
+                            surpriseMeButton.style.display = "none"; // Hide the button after permission
+                        } else {
+                            console.error("Motion permission denied.");
+                            instruction.textContent =
+                                "Motion permission denied. Tap again to retry or use the button.";
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error requesting motion permission:", error);
                         instruction.textContent =
-                            "Motion permission denied. Tap the button to discover a new album.";
-                        fallbackToButton();
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error requesting motion permission:", error);
-                    instruction.textContent =
-                        "Motion permission error. Tap the button to discover a new album.";
-                    fallbackToButton();
-                });
-        } else {
-            console.log("No motion permission needed on this device.");
-            enableShakeDetection();
-        }
+                            "Error requesting motion access. Tap the button to retry.";
+                    });
+            } else {
+                console.log("DeviceMotionEvent doesn't require permission.");
+                enableShakeDetection();
+                instruction.textContent = "Now shake your device to discover a new album!";
+            }
+        });
     } else {
         console.log("DeviceMotionEvent not supported on this device.");
-        fallbackToButton();
+        instruction.textContent = "Tap the button to discover a new album.";
+        surpriseMeButton.style.display = "inline-block";
+        surpriseMeButton.addEventListener("click", surpriseMe);
     }
 
     function enableShakeDetection() {
         console.log("Shake detection enabled.");
+        let lastShakeTime = 0;
+
         window.addEventListener("devicemotion", (event) => {
             const acceleration = event.acceleration;
-            console.log("Acceleration Data:", acceleration);
-
             if (
                 acceleration &&
                 acceleration.x !== null &&
@@ -177,29 +178,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function fallbackToButton() {
-        console.log("Fallback to button functionality.");
-        instruction.textContent = "Tap the button to discover a new album.";
-        surpriseMeButton.style.display = "inline-block"; // Ensure button is visible
-        surpriseMeButton.addEventListener("click", surpriseMe);
-    }
-});
-
-async function surpriseMe() {
-    console.log("Surprise Me triggered.");
-
-    const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
-    console.log("Random Album:", randomAlbumName);
-
-    const recommendationContainer = document.getElementById("recommendation");
-    if (!recommendationContainer) {
-        console.error("Recommendation container not found.");
-        return;
-    }
-
-    try {
+    async function surpriseMe() {
+        console.log("Surprise Me triggered.");
+        const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
+        console.log("Random Album:", randomAlbumName);
+    
         const albumDetails = await fetchAlbumDetails(randomAlbumName);
-
+    
+        const recommendationContainer = document.getElementById("recommendation");
+        if (!recommendationContainer) {
+            console.error("Recommendation container not found.");
+            return;
+        }
+    
         if (albumDetails) {
             recommendationContainer.innerHTML = `
                 <div class="album-recommendation fade-in">
@@ -209,24 +200,17 @@ async function surpriseMe() {
                     <p>Release Date: ${new Date(albumDetails.releaseDate).toLocaleDateString()}</p>
                 </div>
             `;
-
-            // Add fade-in animation
+    
+            // Add fade-in class for animation
             const albumElement = document.querySelector(".album-recommendation");
             albumElement.classList.add("fade-in");
-            setTimeout(() => albumElement.classList.remove("fade-in"), 1000); // Remove animation after 1 second
+            setTimeout(() => albumElement.classList.remove("fade-in"), 1000); // Remove animation class after 1 second
         } else {
-            recommendationContainer.innerHTML = `
-                <p>Sorry, no details could be found for "${randomAlbumName}".</p>
-            `;
+            recommendationContainer.innerHTML = "<p>Sorry, no recommendation could be found at this time.</p>";
         }
-    } catch (error) {
-        console.error("Error in fetching album details:", error);
-        recommendationContainer.innerHTML = `
-            <p>Failed to load album details. Please try again later.</p>
-        `;
     }
-}
-
+    
+});
 
 
 
@@ -630,6 +614,7 @@ function showToast(message) {
         toast.classList.remove("show");
     }, 3000);
 }
+
 
 async function fetchAlbumDetails(albumName) {
     const token = await getAccessToken();
