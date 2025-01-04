@@ -104,6 +104,33 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!instruction) console.error("Instruction element not found.");
     if (!surpriseMeButton) console.error("Surprise Me button not found.");
 
+    const stars = document.querySelectorAll(".rating-container .star");
+
+    stars.forEach((star, index) => {
+        // Highlight stars on hover
+        star.addEventListener("mouseenter", () => {
+            stars.forEach((s, i) => {
+                if (i <= index) {
+                    s.classList.add("hover");
+                } else {
+                    s.classList.remove("hover");
+                }
+            });
+        });
+
+        // Remove hover effect when mouse leaves
+        star.addEventListener("mouseleave", () => {
+            stars.forEach((s) => s.classList.remove("hover"));
+        });
+
+        // Optional: Handle click to make stars "active"
+        star.addEventListener("click", () => {
+            stars.forEach((s, i) => {
+                s.classList.toggle("active", i <= index);
+            });
+        });
+    });
+
     const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
     console.log("Is Mobile Device:", isMobile);
 
