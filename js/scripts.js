@@ -97,19 +97,22 @@ const albumNames = [
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed");
-    console.log(navigator.userAgent);
+    console.log("User Agent:", navigator.userAgent);
 
     const surpriseMeButton = document.getElementById("surpriseMeButton");
-    if (surpriseMeButton) {
-        surpriseMeButton.addEventListener("click", surpriseMe);
-    }
+    const instruction = document.getElementById("instruction");
+    if (!instruction) console.error("Instruction element not found.");
+    if (!surpriseMeButton) console.error("Surprise Me button not found.");
 
-    const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
+    // Detect if it's a mobile device
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     console.log("Is Mobile Device:", isMobile);
-    // Enable shake-to-reveal only on mobile devices
+
     if (isMobile && window.DeviceMotionEvent) {
+        console.log("DeviceMotionEvent supported.");
         instruction.textContent = "Shake your device to discover a new album!";
-        surpriseMeButton.style.display = "none"; // Hide the button for mobile devices
+        surpriseMeButton.style.display = "none"; // Hide the button on mobile devices
+
         let lastShakeTime = 0;
 
         // Check for iOS-specific motion permission
@@ -181,6 +184,50 @@ document.addEventListener("DOMContentLoaded", () => {
         surpriseMeButton.addEventListener("click", surpriseMe);
     }
 });
+
+async function surpriseMe() {
+    console.log("Surprise Me triggered.");
+
+    const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
+    console.log("Random Album:", randomAlbumName);
+
+    const recommendationContainer = document.getElementById("recommendation");
+    if (!recommendationContainer) {
+        console.error("Recommendation container not found.");
+        return;
+    }
+
+    try {
+        const albumDetails = await fetchAlbumDetails(randomAlbumName);
+
+        if (albumDetails) {
+            recommendationContainer.innerHTML = `
+                <div class="album-recommendation fade-in">
+                    <img src="${albumDetails.cover}" alt="${albumDetails.name}" />
+                    <h3>${albumDetails.name}</h3>
+                    <p>by ${albumDetails.artist}</p>
+                    <p>Release Date: ${new Date(albumDetails.releaseDate).toLocaleDateString()}</p>
+                </div>
+            `;
+
+            // Add fade-in animation
+            const albumElement = document.querySelector(".album-recommendation");
+            albumElement.classList.add("fade-in");
+            setTimeout(() => albumElement.classList.remove("fade-in"), 1000); // Remove animation after 1 second
+        } else {
+            recommendationContainer.innerHTML = `
+                <p>Sorry, no details could be found for "${randomAlbumName}".</p>
+            `;
+        }
+    } catch (error) {
+        console.error("Error in fetching album details:", error);
+        recommendationContainer.innerHTML = `
+            <p>Failed to load album details. Please try again later.</p>
+        `;
+    }
+}
+
+
 
 
 const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
@@ -583,31 +630,6 @@ function showToast(message) {
         toast.classList.remove("show");
     }, 3000);
 }
-
-async function surpriseMe() {
-    const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
-    const albumDetails = await fetchAlbumDetails(randomAlbumName);
-
-    const recommendationContainer = document.getElementById("recommendation");
-    if (albumDetails) {
-        recommendationContainer.innerHTML = `
-            <div class="album-recommendation fade-in">
-                <img src="${albumDetails.cover}" alt="${albumDetails.name}" />
-                <h3>${albumDetails.name}</h3>
-                <p>by ${albumDetails.artist}</p>
-                <p>Release Date: ${new Date(albumDetails.releaseDate).toLocaleDateString()}</p>
-            </div>
-        `;
-
-        // Add fade-in class for animation
-        const albumElement = document.querySelector(".album-recommendation");
-        albumElement.classList.add("fade-in");
-        setTimeout(() => albumElement.classList.remove("fade-in"), 1000); // Remove animation class after 1 second
-    } else {
-        recommendationContainer.innerHTML = "<p>Sorry, no recommendation could be found at this time.</p>";
-    }
-}
-
 
 async function fetchAlbumDetails(albumName) {
     const token = await getAccessToken();
