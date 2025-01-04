@@ -180,6 +180,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function surpriseMe() {
         console.log("Surprise Me triggered.");
+        
+        // Hide the Surprise Me button
+        const surpriseMeButton = document.getElementById("surpriseMeButton");
+        if (surpriseMeButton) {
+            surpriseMeButton.style.display = "none"; // Hide the button
+        }
+    
         const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
         console.log("Random Album:", randomAlbumName);
     
@@ -198,6 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <h3>${albumDetails.name}</h3>
                     <p>by ${albumDetails.artist}</p>
                     <p>Release Date: ${new Date(albumDetails.releaseDate).toLocaleDateString()}</p>
+                    <button id="addToListButton">Add to My List</button>
                 </div>
             `;
     
@@ -205,10 +213,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const albumElement = document.querySelector(".album-recommendation");
             albumElement.classList.add("fade-in");
             setTimeout(() => albumElement.classList.remove("fade-in"), 1000); // Remove animation class after 1 second
+    
+            // Add event listener to the "Add to My List" button
+            const addToListButton = document.getElementById("addToListButton");
+            addToListButton.addEventListener("click", () => {
+                addToMyList(albumDetails.name, albumDetails.artist, albumDetails.cover);
+                showToast(`${albumDetails.name} by ${albumDetails.artist} has been added to your list!`);
+            });
         } else {
             recommendationContainer.innerHTML = "<p>Sorry, no recommendation could be found at this time.</p>";
         }
-    }
+    }    
     
 });
 
@@ -535,7 +550,11 @@ function loadAlbumLibrary() {
             <img src="${album.cover}" alt="${album.title}">
             <div class="album-details">
                 <h3>${album.title}</h3>
-                <p class="rating">Rating: ${"⭐".repeat(album.rating)}</p>
+                <p class="rating">
+                    ${[...Array(5)].map((_, i) => `
+                        <span class="star ${i < album.rating ? "active" : ""}">&#9733;</span>
+                    `).join("")}
+                </p>
                 <p class="review">${album.review}</p>
             </div>
         `;

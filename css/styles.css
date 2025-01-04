@@ -270,30 +270,45 @@ button:hover {
 }
 
 .album-details {
-    flex: 1; /* Allow details to take the remaining space */
+    text-align: left; /* Aligns text to the left */
+    flex: 1;
+    padding-left: 10px; /* Adds a little space between image and text */
 }
 
 .album-details h3 {
-    margin: 0 0 5px;
-    font-size: 18px;
-    color: #fff; /* Adjust as per your theme */
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+    color: #1db954; /* Spotify green color for consistency */
 }
 
 .album-details .rating {
-    margin: 0 0 10px;
-    font-size: 16px;
-    color: #ffd700; /* Gold color for stars */
+    font-size: 1rem;
+    color: gold; /* Matches the stars in search */
+    margin: 4px 0;
 }
 
 .album-details .review {
-    margin: 0;
-    font-size: 14px;
-    color: #ccc; /* Subtle color for text */
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-top: 4px;
 }
+
 
 .album-details small {
     color: #aaa;
     font-size: 0.9rem;
+}
+
+.rating-container .star,
+.album-details .star {
+    font-size: 1.5rem;
+    color: #555;
+    cursor: default; /* No hover for the stars in the library */
+}
+
+.rating-container .star.active,
+.album-details .star.active {
+    color: #ffd700; /* Gold for active stars */
 }
 
 
@@ -503,34 +518,35 @@ button:hover {
     align-items: center;
     justify-content: center;
     background-color: #222; /* Dark background for contrast */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow for a pop-out effect */
-    max-width: 500px;
-    margin: 20px auto; /* Center the recommendation box */
+    padding: 15px; /* Reduce padding */
+    border-radius: 8px; /* Slightly smaller radius */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Subtle shadow */
+    max-width: 350px; /* Smaller width */
+    margin: 15px auto; /* Center and adjust margin */
 }
 
 .album-recommendation img {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 10px; /* Rounded corners for the image */
-    margin-bottom: 20px; /* Space between the image and text */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Shadow for the image */
+    width: 90%; /* Make the image smaller */
+    max-width: 250px; /* Limit maximum size */
+    border-radius: 8px; /* Slightly smaller rounding */
+    margin-bottom: 15px; /* Adjust spacing below the image */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Subtle shadow for the image */
 }
 
 .album-recommendation h3 {
-    font-size: 1.8rem;
+    font-size: 1.4rem; /* Smaller title */
     color: #fff;
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* Adjust spacing */
     text-align: center;
 }
 
 .album-recommendation p {
-    font-size: 1.2rem;
-    color: #ddd;
-    margin: 5px 0;
+    font-size: 1rem; /* Reduce paragraph text size */
+    color: #ccc; /* Softer text color */
+    margin: 4px 0; /* Smaller margin */
     text-align: center;
 }
+
 
 .album-recommendation p:first-of-type {
     font-weight: bold;
@@ -613,4 +629,10 @@ button:hover {
     body {
         background-color: #000; /* Different background color for mobile */
     }
+}
+
+#addToListButton {
+    font-size: 1rem; /* Smaller button text */
+    padding: 10px 14px; /* Reduce padding */
+    margin-top: 14px; /* Adjust spacing above the button */
 }
