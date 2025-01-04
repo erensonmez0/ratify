@@ -541,3 +541,76 @@ button:hover {
     font-style: italic;
     color: #bbb;
 }
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Optional: slide up effect */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out; /* Adjust duration and timing as needed */
+}
+
+
+/* Default styles for desktop */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+}
+
+button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.album-recommendation {
+    margin-top: 20px;
+    font-size: 1.2em;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Add animation for fade-in effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    #instruction {
+        font-size: 1.5em;
+        color: #fff;
+    }
+
+    #surpriseMeButton {
+        display: none; /* Hide the button on mobile */
+    }
+
+    body {
+        background-color: #000; /* Different background color for mobile */
+    }
+}

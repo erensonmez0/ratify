@@ -97,15 +97,50 @@ const albumNames = [
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed");
+    console.log(navigator.userAgent);
     
-    const surpriseMeButton = document.getElementById("surpriseMeButton");
-    if (!surpriseMeButton) {
-        console.error("Surprise Me button not found");
-        return;
+     // Check if DeviceMotionEvent is supported
+     if (window.DeviceMotionEvent) {
+        console.log("DeviceMotionEvent is supported!");
+    } else {
+        console.log("DeviceMotionEvent is NOT supported on this device.");
     }
 
-    surpriseMeButton.addEventListener("click", surpriseMe);
+    const surpriseMeButton = document.getElementById("surpriseMeButton");
+    if (surpriseMeButton) {
+        surpriseMeButton.addEventListener("click", surpriseMe);
+    }
+
+    const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
+    // Enable shake-to-reveal only on mobile devices
+    if (isMobile && window.DeviceMotionEvent) {
+        instruction.textContent = "Shake your device to discover a new album!";
+        surpriseMeButton.style.display = "none"; // Hide the button for mobile devices
+        let lastShakeTime = 0;
+
+        window.addEventListener("devicemotion", (event) => {
+            const acceleration = event.acceleration;
+            if (acceleration && acceleration.x && acceleration.y && acceleration.z) {
+                const totalAcceleration =
+                    Math.abs(acceleration.x) +
+                    Math.abs(acceleration.y) +
+                    Math.abs(acceleration.z);
+
+                if (totalAcceleration > 20) { // Shake threshold
+                    const now = Date.now();
+                    if (now - lastShakeTime > 1000) { // 1-second debounce
+                        lastShakeTime = now;
+                        console.log("Shake detected!");
+                        surpriseMe(); // Trigger the Surprise Me feature
+                    }
+                }
+            }
+        });
+    } else {
+        console.log("DeviceMotionEvent is not supported on this device.");
+    }
 });
+
 
 const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
 savedAlbums.forEach(album => {
@@ -174,24 +209,45 @@ function displaySearchResults(albums) {
         const albumDiv = document.createElement("div");
         albumDiv.classList.add("album");
 
-        // Check if album has been reviewed
-        const reviewedAlbum = savedLibrary.find((saved) => saved.title === album.name);
-
+        // Create album content
         albumDiv.innerHTML = `
             <img src="${album.images[0]?.url}" alt="${album.name}" />
             <p><strong>${album.name}</strong> by ${album.artists.map(artist => artist.name).join(", ")}</p>
-            <button onclick="addToMyList('${album.name}', '${album.artists.map(artist => artist.name).join(", ")}', '${album.images[0]?.url}')">Add to My List</button>
-            <button onclick="openReviewPopup('${album.name}', '${album.images[0]?.url}', '${album.release_date}', ${reviewedAlbum ? `'${reviewedAlbum.review}'` : null}, ${reviewedAlbum ? reviewedAlbum.rating : null})">
-                ${reviewedAlbum ? "Review Again" : "Review"}
-            </button>
+            <button class="add-to-list">Add to My List</button>
+            <button class="review-button">${savedLibrary.find(saved => saved.title === album.name) ? "Review Again" : "Review"}</button>
         `;
+
+        // Attach event listeners
+        const addToListButton = albumDiv.querySelector(".add-to-list");
+        const reviewButton = albumDiv.querySelector(".review-button");
+
+        addToListButton.addEventListener("click", () => {
+            addToMyList(
+                album.name,
+                album.artists.map(artist => artist.name).join(", "),
+                album.images[0]?.url
+            );
+        });
+
+        reviewButton.addEventListener("click", () => {
+            const reviewedAlbum = savedLibrary.find(saved => saved.title === album.name);
+            openReviewPopup(
+                album.name,
+                album.images[0]?.url,
+                album.release_date,
+                reviewedAlbum ? reviewedAlbum.review : null,
+                reviewedAlbum ? reviewedAlbum.rating : null
+            );
+        });
 
         resultsContainer.appendChild(albumDiv);
     });
 }
 
 
+
 function addToMyList(albumName, artistName, albumCover) {
+    console.log("Adding album:", albumName, artistName, albumCover); // Debugging
     const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
     const albumExists = savedAlbums.some(album => album.albumName === albumName);
 
@@ -205,7 +261,6 @@ function addToMyList(albumName, artistName, albumCover) {
 }
 
 
-
 function displaySavedAlbums() {
     const savedList = document.getElementById("savedList");
     const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
@@ -217,42 +272,33 @@ function displaySavedAlbums() {
         return;
     }
 
-    // Sort albums by dateAdded (newest first)
-    savedAlbums.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+    // Create a sorted copy for display purposes
+    const sortedAlbums = [...savedAlbums].sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
 
-    savedAlbums.forEach((album, index) => {
+    sortedAlbums.forEach((album) => {
         const albumDiv = document.createElement("div");
         albumDiv.classList.add("album-item");
 
-        // Check if the album is marked as listened and apply visual feedback
-        if (album.listened) {
-            albumDiv.style.opacity = "0.5"; // Dim the album visually
-            albumDiv.innerHTML = `
-                <img src="${album.albumCover}" alt="${album.albumName}" class="album-cover" />
-                <div class="album-details">
-                    <h3>${album.albumName}</h3>
-                    <p>by ${album.artistName}</p>
-                    <p><em>Listened</em></p>
-                    <p>Date Added: ${new Date(album.dateAdded).toLocaleDateString()}</p>
-                </div>
-            `;
-        } else {
-            albumDiv.innerHTML = `
-                <img src="${album.albumCover}" alt="${album.albumName}" class="album-cover" />
-                <div class="album-details">
-                    <h3>${album.albumName}</h3>
-                    <p>by ${album.artistName}</p>
-                    <p>Date Added: ${new Date(album.dateAdded).toLocaleDateString()}</p>
-                </div>
-            `;
-        }
+        albumDiv.innerHTML = `
+            <img src="${album.albumCover}" alt="${album.albumName}" class="album-cover" />
+            <div class="album-details">
+                <h3>${album.albumName}</h3>
+                <p>by ${album.artistName}</p>
+                <p>Date Added: ${new Date(album.dateAdded).toLocaleDateString()}</p>
+            </div>
+        `;
 
-        // Add click event listener for removal or marking as listened
-        albumDiv.addEventListener("click", () => openAlbumOptions(index));
+        // Add click event to open the delete confirmation modal
+        albumDiv.addEventListener("click", () => {
+            openAlbumOptions(savedAlbums.indexOf(album)); // Pass the original index of the album
+        });
 
         savedList.appendChild(albumDiv);
     });
 }
+
+
+
 
 
 document.addEventListener("DOMContentLoaded", displaySavedAlbums);
@@ -268,14 +314,15 @@ function openAlbumOptions(index) {
 
     // Handle "Yes" button click
     confirmButton.onclick = () => {
-        removeAlbum(index); // Remove the album
+        console.log("Deleting album at index:", index);
+        removeAlbum(index); // Ensure the correct album is removed
         modal.style.display = "none"; // Close the modal
         showToast("Album removed successfully!");
     };
 
     // Handle "No" button click
     cancelButton.onclick = () => {
-        modal.style.display = "none"; // Close the modal
+        modal.style.display = "none"; // Close the modal without action
     };
 
     // Close the modal when clicking outside of it
@@ -289,9 +336,15 @@ function openAlbumOptions(index) {
 
 
 
+
 function removeAlbum(index) {
     const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
+    console.log("Removing album at index:", index); // Debugging
+    console.log("Before removal:", savedAlbums); // Debugging
+
     savedAlbums.splice(index, 1); // Remove the selected album
+    console.log("After removal:", savedAlbums); // Debugging
+
     localStorage.setItem("savedAlbums", JSON.stringify(savedAlbums));
     displaySavedAlbums(); // Refresh the list
     showToast("Album removed successfully!");
@@ -491,27 +544,29 @@ function showToast(message) {
 }
 
 async function surpriseMe() {
-    // Pick a random album from the list
     const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
-
-    // Fetch album details using the Spotify API
     const albumDetails = await fetchAlbumDetails(randomAlbumName);
 
-    // Update the UI
     const recommendationContainer = document.getElementById("recommendation");
     if (albumDetails) {
         recommendationContainer.innerHTML = `
-            <div class="album-recommendation">
+            <div class="album-recommendation fade-in">
                 <img src="${albumDetails.cover}" alt="${albumDetails.name}" />
                 <h3>${albumDetails.name}</h3>
                 <p>by ${albumDetails.artist}</p>
                 <p>Release Date: ${new Date(albumDetails.releaseDate).toLocaleDateString()}</p>
             </div>
         `;
+
+        // Add fade-in class for animation
+        const albumElement = document.querySelector(".album-recommendation");
+        albumElement.classList.add("fade-in");
+        setTimeout(() => albumElement.classList.remove("fade-in"), 1000); // Remove animation class after 1 second
     } else {
         recommendationContainer.innerHTML = "<p>Sorry, no recommendation could be found at this time.</p>";
     }
 }
+
 
 async function fetchAlbumDetails(albumName) {
     const token = await getAccessToken();
