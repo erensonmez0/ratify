@@ -98,13 +98,6 @@ const albumNames = [
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed");
     console.log(navigator.userAgent);
-    
-     // Check if DeviceMotionEvent is supported
-     if (window.DeviceMotionEvent) {
-        console.log("DeviceMotionEvent is supported!");
-    } else {
-        console.log("DeviceMotionEvent is NOT supported on this device.");
-    }
 
     const surpriseMeButton = document.getElementById("surpriseMeButton");
     if (surpriseMeButton) {
@@ -112,32 +105,80 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
+    console.log("Is Mobile Device:", isMobile);
     // Enable shake-to-reveal only on mobile devices
     if (isMobile && window.DeviceMotionEvent) {
         instruction.textContent = "Shake your device to discover a new album!";
         surpriseMeButton.style.display = "none"; // Hide the button for mobile devices
         let lastShakeTime = 0;
 
+        // Check for iOS-specific motion permission
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+            DeviceMotionEvent.requestPermission()
+                .then((response) => {
+                    if (response === "granted") {
+                        console.log("Motion permission granted!");
+                        enableShakeDetection();
+                    } else {
+                        console.error("Motion permission denied by user.");
+                        instruction.textContent =
+                            "Motion permission denied. Tap the button to discover a new album.";
+                        fallbackToButton();
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error requesting motion permission:", error);
+                    instruction.textContent =
+                        "Motion permission error. Tap the button to discover a new album.";
+                    fallbackToButton();
+                });
+        } else {
+            console.log("No motion permission needed on this device.");
+            enableShakeDetection();
+        }
+    } else {
+        console.log("DeviceMotionEvent not supported on this device.");
+        fallbackToButton();
+    }
+
+    function enableShakeDetection() {
+        console.log("Shake detection enabled.");
         window.addEventListener("devicemotion", (event) => {
             const acceleration = event.acceleration;
-            if (acceleration && acceleration.x && acceleration.y && acceleration.z) {
+            console.log("Acceleration Data:", acceleration);
+
+            if (
+                acceleration &&
+                acceleration.x !== null &&
+                acceleration.y !== null &&
+                acceleration.z !== null
+            ) {
                 const totalAcceleration =
                     Math.abs(acceleration.x) +
                     Math.abs(acceleration.y) +
                     Math.abs(acceleration.z);
+
+                console.log("Total Acceleration:", totalAcceleration);
 
                 if (totalAcceleration > 20) { // Shake threshold
                     const now = Date.now();
                     if (now - lastShakeTime > 1000) { // 1-second debounce
                         lastShakeTime = now;
                         console.log("Shake detected!");
-                        surpriseMe(); // Trigger the Surprise Me feature
+                        surpriseMe();
                     }
                 }
+            } else {
+                console.warn("Incomplete acceleration data:", acceleration);
             }
         });
-    } else {
-        console.log("DeviceMotionEvent is not supported on this device.");
+    }
+
+    function fallbackToButton() {
+        console.log("Fallback to button functionality.");
+        instruction.textContent = "Tap the button to discover a new album.";
+        surpriseMeButton.style.display = "inline-block"; // Ensure button is visible
+        surpriseMeButton.addEventListener("click", surpriseMe);
     }
 });
 
