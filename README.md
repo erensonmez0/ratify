@@ -1,2 +1,3 @@
-# ratify
-This project is a web app where the user can discover, save, and rate albums with some html5 feautures; using Spotify API
+# Ratify 🎵
+This project is a web app where users can discover, save, and rate albums with HTML5 features and interactive functionalities. The app includes features like album reviews, a "Surprise Me" button, and local storage integration to save user data.
+#
