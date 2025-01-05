@@ -8,9 +8,8 @@ This project is a web app where users can discover, save, and rate albums with H
 - [About the Project](#about-the-project)
 - [Features](#features)
 - [Usage Guide](#usage-guide)
+- [How to Open the Website](#how-to-open-the-website)
 - [Technologies Used](#technologies-used)
-- [Future Enhancements](#future-enhancements)
-
 ---
 
 ## About the Project
@@ -37,6 +36,22 @@ This project is a web app where users can discover, save, and rate albums with H
 - **Library**: Manage your reviewed albums.
 - **My List**: Keep track of your saved albums.
 - **Surprise Me**: Shake your phone or click the button to get random album recommendations.
+
+---
+
+## How to Open the Website
+
+To experience **Ratify** seamlessly, follow these steps:
+
+- **Desktop Users**: 
+  Simply open the following link in your web browser for the home page:  
+  [Ratify Website](https://erensonmez0.github.io/ratify/pages/index.html)
+
+- **Mobile Users (iOS)**:  
+  Due to potential motion sensor limitations on iOS, we recommend using the above link directly in Safari or another browser. The "Surprise Me" feature might require additional permissions, which iOS devices sometimes restrict.
+
+- **Mobile Users (Android)**:  
+  Open the link in your preferred browser, such as Chrome or Firefox. Ensure motion permissions are granted for the "Surprise Me" feature to work.
 
 ---
 
