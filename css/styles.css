@@ -16,6 +16,7 @@ header {
     padding: 15px 20px;
     text-align: center;
     border-bottom: 2px solid rgb(0, 0, 0);
+    position: relative;
 }
 
 header h1 {
@@ -53,6 +54,42 @@ nav ul li a {
 nav ul li a:hover {
     background-color: #161B33;
     color: #7D83FF;
+}
+
+@media (max-width: 768px) {
+    .hamburger-menu {
+        display: block !important;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Hide off-screen initially */
+        width: 70%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.5);
+        transition: right 0.3s ease;
+        z-index: 1500;
+    }
+
+    nav.open {
+        right: 0; /* Show menu */
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 0;
+    }
+
+    nav ul li {
+        margin: 15px 0;
+    }
+
+    nav ul li a {
+        font-size: 1.2rem;
+    }
 }
 
 /* Main Content */
@@ -772,4 +809,21 @@ button:hover {
 }
 button {
     z-index: 1001; /* Ensure buttons are above the popup */
+}
+
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    z-index: 2000;
+}
+
+.hamburger-menu:focus {
+    outline: none;
 }

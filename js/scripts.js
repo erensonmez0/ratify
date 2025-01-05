@@ -254,6 +254,19 @@ document.addEventListener("DOMContentLoaded", () => {
     
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+    const hamburgerMenu = document.querySelector(".hamburger-menu");
+    const nav = document.querySelector("nav");
+
+    if (hamburgerMenu && nav) {
+        // Toggle the menu on click
+        hamburgerMenu.addEventListener("click", () => {
+            nav.classList.toggle("open");
+        });
+    } else {
+        console.error("Hamburger menu or navigation element not found.");
+    }
+});
 
 
 const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
