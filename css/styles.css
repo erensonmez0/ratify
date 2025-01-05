@@ -64,17 +64,21 @@ nav ul li a:hover {
     nav {
         position: fixed;
         top: 0;
-        right: -100%; /* Hide off-screen initially */
-        width: 70%;
+        left: -100%; /* Hide off-screen initially */
+        width: 55%;
         height: 100%;
         background: rgba(0, 0, 0, 0.9);
-        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.5);
-        transition: right 0.3s ease;
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+        transition: left 0.3s ease;
         z-index: 1500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
     }
 
     nav.open {
-        right: 0; /* Show menu */
+        left: 0; /* Show menu */
     }
 
     nav ul {
@@ -89,6 +93,12 @@ nav ul li a:hover {
 
     nav ul li a {
         font-size: 1.2rem;
+    }
+
+    nav ul li a:hover {
+        background-color: #161B33; /* Highlight on hover */
+        color: #7D83FF;
+        border-radius: 5px;
     }
 }
 
@@ -243,10 +253,12 @@ footer a:hover {
 
 .rating-container .star.hover {
     color: #907c0c; /* Gold color for hovered stars */
+    cursor: pointer;
 }
 
 .rating-container .star.active {
     color: #ffd700; /* Gold color for clicked stars */
+    cursor: pointer;
 }
 
 textarea {
@@ -471,6 +483,7 @@ button:hover {
     width: 300px;
     text-align: center;
 }
+
 
 #deletePopup .popup-content {
     display: flex;
@@ -833,7 +846,7 @@ button {
     cursor: pointer;
     position: absolute;
     top: 15px;
-    right: 20px;
+    left: 20px;
     z-index: 2000;
 }
 
@@ -842,6 +855,10 @@ button {
 }
 
 @media (max-width: 768px) {
+    input, button, textarea {
+        font-size: 16px; /* Set font size to at least 16px to prevent zoom */
+    }
+
     /* Body background for mobile */
     .home-page {
         background: #000; /* Matte black */
@@ -906,4 +923,36 @@ button {
     .home-page .background-image-container {
         display: none; /* Remove extra desktop-specific background container */
     }
+
+    .search-container {
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center align horizontally */
+        gap: 20px; /* Increase the spacing between the input and button */
+    }
+
+    .search-container input {
+        width: 80%; /* Keep input field proportional */
+        max-width: 300px; /* Limit max width */
+    }
+
+    .search-container button {
+        width: 40%; /* Keep button proportional */
+        max-width: 300px; /* Limit max width */
+        padding: 10px; /* Adjust padding for smaller appearance */
+        font-size: 1rem; /* Keep font size balanced */
+    }
 }
+
+.list-empty-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+    color: #7D83FF;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-top: -50px;
+}
+
+

@@ -390,13 +390,16 @@ function addToMyList(albumName, artistName, albumCover) {
 
 function displaySavedAlbums() {
     const savedList = document.getElementById("savedList");
+    const emptyListMessage = document.getElementById("emptyListMessage");
     const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
 
     savedList.innerHTML = ""; // Clear previous content
 
     if (savedAlbums.length === 0) {
-        savedList.innerHTML = "<p>Your list is empty!</p>";
+        emptyListMessage.style.display = "flex";
         return;
+    } else {
+        emptyListMessage.style.display = "none";
     }
 
     // Create a sorted copy for display purposes
