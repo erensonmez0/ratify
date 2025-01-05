@@ -157,17 +157,24 @@ footer a:hover {
 }
 
 .search-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px auto;
-  }
+    position: relative; /* Ensure stacking context */
+    z-index: 1; /* Set lower z-index than the popup */
+}
+  
   
   .search-container input {
     width: 300px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #4d519b; /* Use a color that matches your brand's theme */
     border-radius: 5px;
+    background-color: #161B33; /* Match your site's dark theme */
+    color: #fff; /* Ensure the text is readable */
+    font-size: 1rem;
   }
+
+  .search-container input::placeholder {
+    color: #7D83FF; /* Subtle color for the placeholder text */
+ }
   
   .search-container button {
     padding: 10px 15px;
@@ -182,6 +189,7 @@ footer a:hover {
   .search-container button:hover {
     background-color: rgb(4, 128, 128);
   }
+
 
   .review-popup {
     display: none;
@@ -514,7 +522,7 @@ button:hover {
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    color: white;
+    color: #7D83FF;
     width: 300px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
@@ -620,8 +628,13 @@ button:hover {
 
 /* Default styles for desktop */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #111;
+    font-family: sans-serif, "Consolas";
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background: linear-gradient(to bottom, #161B33, rgb(0, 0, 0));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     color: #fff;
     text-align: center;
 }
@@ -783,13 +796,13 @@ button:hover {
     position: relative;
     margin-top: 20px;
     text-align: center;
-    overflow: hidden; /* Kenarlarda taşmaları engeller */
+    overflow: hidden; 
 }
 
 .background-image {
-    width: 80%; /* Görseli küçült */
-    height: auto; /* Oranı koru */
-    margin: 0 auto; /* Ortala */
+    width: 80%; 
+    height: auto; 
+    margin: 0 auto; 
     
     /* Daha geniş ve belirgin kenar fade efekti */
     -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
@@ -826,4 +839,71 @@ button {
 
 .hamburger-menu:focus {
     outline: none;
+}
+
+@media (max-width: 768px) {
+    /* Body background for mobile */
+    .home-page {
+        background: #000; /* Matte black */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Header (top part - matte background) */
+    .home-page header {
+        background-color: #000; /* Matte black */
+        color: #7D83FF;
+        padding: 15px 20px;
+        text-align: center;
+        position: relative;
+        border-bottom: none;
+        flex-shrink: 0;
+    }
+
+    /* Section under the header - album collage background */
+    .home-page main {
+        background: url('../potentialWallpaper.jpg') no-repeat center center;
+        background-size: cover;
+        flex-grow: 1;
+        padding: 20px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center vertically */
+        align-items: center;
+    }
+
+    
+    /* Matte background for "Welcome to Ratify" text box */
+    #welcome {
+        background: rgba(0, 0, 0, 0.751); /* Matte black with transparency */
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        margin-top: -70px; /* Adjust this value to move the box up */
+        position: relative;
+    }
+
+    .home-page footer {
+        background-color: #000; /* Matte black */
+        color: #7D83FF; /* Match header color */
+        padding: 10px 20px;
+        text-align: center;
+        border-top: 1px solid #7D83FF; /* Subtle separator */
+        font-size: 0.8rem;
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+
+    /* Ensure text is readable over the background */
+    #welcome h2 {
+        color: #7D83FF; /* Matching Ratify brand color */
+    }
+
+    /* Adjust spacing to make the layout look clean */
+    .home-page .background-image-container {
+        display: none; /* Remove extra desktop-specific background container */
+    }
 }

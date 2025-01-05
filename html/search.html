@@ -31,7 +31,7 @@
         <h2>Search Albums</h2>
         <div class="search-container">
             <input type="text" id="albumSearch" placeholder="Search for an album..." />
-            <button id="searchButton">Search</button>
+            <button class="search-button" id="searchButton">Search</button>
         </div>
         <div id="searchResults" class="search-results"></div>
     </main>
@@ -50,7 +50,7 @@
                 <span class="star" onclick="setRating(5)">&#9733;</span>
             </div>
             <textarea id="reviewText" placeholder="Write your review here..."></textarea>
-            <button onclick="saveReview()">Save</button>
+            <button class="save-button" onclick="saveReview()">Save</button>
         </div>
     </div>
     <div id="toast" class="toast"></div>
