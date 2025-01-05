@@ -95,6 +95,14 @@ const albumNames = [
     "Hotel California the Eagles",
 ];
 
+const editPopup = document.getElementById("editPopup");
+const closeEditPopupButton = document.getElementById("closeEditPopup");
+const saveEditButton = document.getElementById("saveEditButton");
+const deleteReviewButton = document.getElementById("deleteReviewButton");
+
+console.log("Save Edit Button:", saveEditButton); // Debugging
+console.log("Delete Review Button:", deleteReviewButton); // Debugging
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed");
 
@@ -129,6 +137,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 s.classList.toggle("active", i <= index);
             });
         });
+
+        const closeEditPopupButton = document.getElementById("closeEditPopup");
+
+        if (!closeEditPopupButton) {
+            console.error("closeEditPopupButton element not found.");
+        } else {
+            // Attach event listener for closing the popup
+            closeEditPopupButton.addEventListener("click", closeEditPopup);
+        }
     });
 
     const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
@@ -251,9 +268,54 @@ document.addEventListener("DOMContentLoaded", () => {
             recommendationContainer.innerHTML = "<p>Sorry, no recommendation could be found at this time.</p>";
         }
     }    
+
+    saveEditButton.addEventListener("click", () => {
+        console.log("Save Changes Clicked", currentAlbum);
+
+        const updatedReview = document.getElementById("editReviewText").value.trim();
+        const updatedRating = currentAlbum.rating;
+
+        if (updatedReview && updatedRating) {
+            const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+
+            // Update the album data in the library
+            if (currentAlbum.index !== undefined) {
+                console.log("Updating album at index:", currentAlbum.index);
+                savedLibrary[currentAlbum.index] = {
+                    ...savedLibrary[currentAlbum.index],
+                    review: updatedReview,
+                    rating: updatedRating,
+                };
+
+                localStorage.setItem("albumLibrary", JSON.stringify(savedLibrary)); // Save changes
+                loadAlbumLibrary(); // Refresh the library display
+                closeEditPopup(); // Close the popup
+                showToast(`Your review for "${currentAlbum.title}" has been updated.`);
+            } else {
+                console.error("No index found for currentAlbum.");
+            }
+        } else {
+            alert("Please provide both a review and a rating.");
+        }
+    });
+
+    deleteReviewButton.addEventListener("click", () => {
+        console.log("Delete Button Clicked", currentAlbum);
+
+        const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+        if (currentAlbum.index !== undefined) {
+            console.log("Deleting album at index:", currentAlbum.index);
+            savedLibrary.splice(currentAlbum.index, 1); // Remove the album from the array
+            localStorage.setItem("albumLibrary", JSON.stringify(savedLibrary)); // Save the updated library
+            loadAlbumLibrary(); // Refresh the library display
+            closeEditPopup(); // Close the popup
+            showToast(`"${currentAlbum.title}" has been deleted.`);
+        } else {
+            console.error("No index found for currentAlbum.");
+        }
+    });
     
 });
-
 
 
 const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
@@ -583,15 +645,19 @@ function loadAlbumLibrary() {
                     `).join("")}
                 </p>
                 <p class="review">${album.review}</p>
+                <button class="edit-button">Edit</button> <!-- Add Edit Button -->
             </div>
         `;
 
-        // Add click event to show delete confirmation
-        albumDiv.addEventListener("click", () => openDeletePopup(index));
+        // Add event listener for the Edit button
+        albumDiv.querySelector(".edit-button").addEventListener("click", () => {
+            openEditPopup(album, index); // Pass the album and its index
+        });
 
         libraryContainer.appendChild(albumDiv);
     });
 }
+
 
 function openDeletePopup(index) {
     const popup = document.getElementById("deletePopup");
@@ -613,6 +679,43 @@ function openDeletePopup(index) {
         popup.style.display = "none";
     };
 }
+
+// Function to open the edit popup
+function openEditPopup(album, index) {
+    document.getElementById("editAlbumCover").src = album.cover;
+    document.getElementById("editAlbumTitle").textContent = album.title;
+    document.getElementById("editReviewText").value = album.review || "";
+
+    // Reset and highlight stars
+    const stars = document.querySelectorAll("#editPopup .rating-container .star");
+    stars.forEach((star, i) => {
+        star.classList.toggle("active", i < album.rating);
+        star.addEventListener("click", () => setEditRating(i + 1)); // Attach event listener to set rating
+    });
+
+    // Store album and its index
+    currentAlbum = { ...album, index };
+    console.log("Current Album for Editing:", currentAlbum); // Debugging
+
+    // Show the popup
+    editPopup.style.display = "flex";
+}
+
+
+
+// Function to close the edit popup
+function closeEditPopup() {
+    editPopup.style.display = "none";
+}
+
+function setEditRating(rating) {
+    const stars = document.querySelectorAll("#editPopup .rating-container .star");
+    stars.forEach((star, i) => {
+        star.classList.toggle("active", i < rating);
+    });
+    currentAlbum.rating = rating; // Update the rating in the currentAlbum object
+}
+
 
 function deleteReview(index) {
     const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];

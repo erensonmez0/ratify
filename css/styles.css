@@ -3,7 +3,7 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
-    background: linear-gradient(to bottom, rgb(40, 40, 40), rgb(0, 0, 0));
+    background: linear-gradient(to bottom, #161B33, rgb(0, 0, 0));
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: #fff;
@@ -11,11 +11,11 @@ body {
 
 /* Header */
 header {
-    background-color: rgb(25, 25, 25);
-    color: rgb(2, 173, 173);
+    background-color: linear-gradient(to bottom, #161B33, rgb(0, 0, 0));
+    color: #7D83FF;
     padding: 15px 20px;
     text-align: center;
-    border-bottom: 2px solid #333;
+    border-bottom: 2px solid rgb(0, 0, 0);
 }
 
 header h1 {
@@ -31,9 +31,11 @@ nav ul {
     margin: 0;
     display: flex;
     justify-content: center;
-    background-color: rgb(20, 20, 20);
-    border-top: 2px solid #333;
-    border-bottom: 2px solid #333;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-top: 2px solid #161B33;
+
+
+    border-bottom: 2px solid #161B33;
 }
 
 nav ul li {
@@ -49,8 +51,8 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: rgb(50, 50, 50);
-    color: rgb(2, 173, 173);
+    background-color: #161B33;
+    color: #7D83FF;
 }
 
 /* Main Content */
@@ -61,13 +63,13 @@ main {
 section {
     margin-bottom: 40px;
     padding: 20px;
-    background-color: rgb(30, 30, 30);
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }
 
 h2 {
-    color: rgb(2, 173, 173);
+    color: #7D83FF;
     font-size: 1.5rem;
     margin-bottom: 15px;
 }
@@ -75,15 +77,15 @@ h2 {
 /* Footer */
 footer {
     text-align: center;
-    background-color: rgb(20, 20, 20);
+    background-color: rgb#161B33;
     color: #aaa;
     padding: 15px 0;
     font-size: 0.9rem;
-    border-top: 2px solid #333;
+    border-top: 2px solid #161B33;
 }
 
 footer a {
-    color: #1db954;
+    color: #7D83FF;
     text-decoration: none;
 }
 
@@ -93,7 +95,7 @@ footer a:hover {
 
 .album {
     text-align: center;
-    background-color: rgb(40, 40, 40);
+    background-color: rgb(0, 0, 0);
     padding: 15px;
     margin: 15px 0;
     border-radius: 10px;
@@ -114,7 +116,7 @@ footer a:hover {
 }
 
 .album p strong {
-    color: #1db954;
+    color: #7D83FF;
 }
 
 .search-container {
@@ -134,14 +136,14 @@ footer a:hover {
     padding: 10px 15px;
     margin-left: 10px;
     border: none;
-    background-color: rgb(2, 173, 173);
+    background-color: #009FB7;
     color: white;
     border-radius: 5px;
     cursor: pointer;
   }
   
   .search-container button:hover {
-    background-color: rgb(0, 160, 160);
+    background-color: rgb(4, 128, 128);
   }
 
   .review-popup {
@@ -281,7 +283,7 @@ button:hover {
 .album-details h3 {
     margin-bottom: 8px;
     font-size: 1.2rem;
-    color: #1db954; /* Spotify green color for consistency */
+    color: #7D83FF; /* Spotify green color for consistency */
 }
 
 .album-details .rating {
@@ -319,7 +321,7 @@ button:hover {
     visibility: hidden;
     min-width: 200px;
     margin: 10px; /* Adjust margin for top-left positioning */
-    background-color: rgb(2, 173, 173); /* Teal color */
+    background-color: #009FB7; /* Teal color */
     color: white;
     text-align: center;
     border-radius: 5px;
@@ -383,7 +385,7 @@ button:hover {
 
 /* Button Styling */
 .popup button {
-    background-color: #007bff; /* Blue background for buttons */
+    background-color: #009FB7; /* Blue background for buttons */
     color: white; /* White text for contrast */
     border: none;
     border-radius: 4px;
@@ -395,7 +397,7 @@ button:hover {
 }
 
 .popup button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #009FB7; /* Darker blue on hover */
 }
 
 .album-item {
@@ -435,14 +437,14 @@ button:hover {
     margin: 10px;
     padding: 10px 20px;
     border: none;
-    background-color: #007bff;
+    background-color: #009FB7;
     color: white;
     border-radius: 5px;
     cursor: pointer;
 }
 
 #deletePopup button:hover {
-    background-color: #0056b3;
+    background-color: #009FB7;
 }
 
 #deletePopup .close {
@@ -496,12 +498,12 @@ button:hover {
 }
 
 .modal-buttons .confirm {
-    background-color: #007bff;
+    background-color: #009FB7;
     color: white;
 }
 
 .modal-buttons .confirm:hover {
-    background-color: #0056b3;
+    background-color: #009FB7;
 }
 
 .modal-buttons .cancel {
@@ -520,7 +522,8 @@ button:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #222; /* Dark background for contrast */
+    background: radial-gradient(circle, #0d1021, rgb(0, 0, 0));
+    /*background-color: #000;*/
     padding: 15px; /* Reduce padding */
     border-radius: 8px; /* Slightly smaller radius */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Subtle shadow */
@@ -553,7 +556,7 @@ button:hover {
 
 .album-recommendation p:first-of-type {
     font-weight: bold;
-    color: #1db954; /* Spotify's green color */
+    color: #7D83FF; /* Spotify's green color */
 }
 
 .album-recommendation p:last-of-type {
@@ -587,7 +590,7 @@ body {
 }
 
 button {
-    background-color: #007bff;
+    background-color: #009FB7;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -597,7 +600,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #009FB7;
 }
 
 .album-recommendation {
@@ -638,4 +641,127 @@ button:hover {
     font-size: 1rem; /* Smaller button text */
     padding: 10px 14px; /* Reduce padding */
     margin-top: 14px; /* Adjust spacing above the button */
+}
+
+#editPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222; /* Dark background for consistency */
+    padding: 20px;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+    z-index: 1000;
+    color: #fff; /* White text for readability */
+    width: 400px; /* Fixed width for uniformity */
+    text-align: center; /* Center text alignment */
+}
+
+#editPopup .popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#editPopup img {
+    max-width: 150px; /* Limit the album cover size */
+    border-radius: 8px;
+    margin-bottom: 15px; /* Add spacing below the image */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Subtle shadow for the image */
+}
+
+#editPopup h2 {
+    font-size: 1.5rem;
+    margin: 10px 0;
+    color: #7D83FF; /* Spotify green for the title */
+}
+
+#editPopup textarea {
+    width: calc(100% - 20px); /* Adjust width */
+    height: 100px; /* Slightly taller for reviews */
+    background-color: #303030; /* Darker background */
+    border: none;
+    border-radius: 5px;
+    color: #fff; /* White text */
+    padding: 10px;
+    margin-bottom: 15px;
+    resize: none;
+}
+
+#editPopup textarea::placeholder {
+    color: #888; /* Subtle placeholder text */
+}
+
+#editPopup .rating-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+#editPopup .rating-container .star {
+    font-size: 2rem;
+    color: #555; /* Default star color */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+#editPopup .rating-container .star.active,
+#editPopup .rating-container .star:hover {
+    color: #ffd700; /* Gold for active or hovered stars */
+}
+
+#editPopup button {
+    background-color: rgb(2, 173, 173); /* Teal button color */
+    color: white; /* White text */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px; /* Add space between buttons */
+    width: 100%; /* Full-width buttons */
+}
+
+#editPopup button:hover {
+    background-color: #31d6d6; /* Lighter teal on hover */
+}
+
+#editPopup .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #aaa;
+    transition: color 0.3s;
+}
+
+#editPopup .close:hover {
+    color: #ff5757; /* Red on hover */
+}
+
+.background-image-container {
+    position: relative;
+    margin-top: 20px;
+    text-align: center;
+    overflow: hidden; /* Kenarlarda taşmaları engeller */
+}
+
+.background-image {
+    width: 80%; /* Görseli küçült */
+    height: auto; /* Oranı koru */
+    margin: 0 auto; /* Ortala */
+    
+    /* Daha geniş ve belirgin kenar fade efekti */
+    -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
+    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
+    
+    /* Görünümü daha yumuşak hale getirmek için şeffaflık */
+    opacity: 0.85;
+
+    /* Geçiş efektini smooth hale getir */
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
 }
