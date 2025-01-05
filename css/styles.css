@@ -317,6 +317,87 @@ button:hover {
     color: rgb(177, 192, 192);
 }
 
+/* Feedback Popup Styles */
+#feedbackPopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background-color: var(--background-color);
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    z-index: 1000;
+}
+
+#feedbackPopup p {
+    margin: 20px 0;
+    font-size: 1.1rem;
+}
+
+#feedbackPopup button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#feedbackPopup button:hover {
+    background-color: #038a9f;
+}
+
+/* Feedback Popup Styles */
+.custom-popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-popup-content {
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 300px;
+}
+
+.custom-popup-content p {
+    margin: 15px 0;
+    font-size: 1.2rem;
+}
+
+.custom-popup-content button {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.custom-popup-content button:hover {
+    background-color: #038a9f;
+}
+
 .star.active,
 .star.hover {
     color: gold;

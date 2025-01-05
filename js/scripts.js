@@ -283,6 +283,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
 });
 
+/**
+ * Initialises the menu for the mobile devices.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     const hamburgerMenu = document.querySelector(".hamburger-menu");
     const nav = document.querySelector("nav");
@@ -296,7 +299,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Hamburger menu or navigation element not found.");
     }
 });
-
 
 const savedAlbums = JSON.parse(localStorage.getItem(SAVED_ALBUMS_KEY)) || [];
 savedAlbums.forEach(album => {
@@ -628,8 +630,32 @@ function saveReview() {
         showToast(`Your review for "${currentAlbum.title}" has been saved successfully!`);
         closeReviewPopup();
     } else {
-        alert("Please provide a rating and a review before saving.");
+        showFeedback("Please provide a rating and a review before saving.");
     }
+}
+
+/**
+ * Displays a custom feedback popup with a message.
+ * @param {string} message - The message to display in the popup.
+ */
+function showFeedback(message) {
+    const feedbackPopup = document.getElementById("feedbackPopup");
+    const feedbackMessage = document.getElementById("feedbackMessage");
+    const closeFeedbackButton = document.getElementById("closeFeedbackButton");
+
+    feedbackMessage.textContent = message;
+    feedbackPopup.style.display = "flex";
+
+    closeFeedbackButton.addEventListener("click", () => {
+        feedbackPopup.style.display = "none";
+    });
+
+    // Optional: Close popup when clicking outside of it
+    window.addEventListener("click", (event) => {
+        if (event.target === feedbackPopup) {
+            feedbackPopup.style.display = "none";
+        }
+    });
 }
 
 /**
@@ -711,7 +737,7 @@ function handleSearch() {
     if (query) {
         searchAlbum(query);
     } else {
-        alert("Please enter a search term.");
+        showCustomFeedback("Please enter a search term.");
     }
 }
 
@@ -722,6 +748,32 @@ document.getElementById("albumSearch").addEventListener("keydown", (event) => {
         handleSearch();
     }
 });
+
+/**
+ * Displays a custom popup with a feedback message.
+ * @param {string} message - The message to display in the popup.
+ */
+function showCustomFeedback(message) {
+    const popup = document.getElementById("customFeedbackPopup");
+    const messageElement = document.getElementById("customFeedbackMessage");
+    const closeButton = document.getElementById("closePopupButton");
+
+    // Set the message and display the popup
+    messageElement.textContent = message;
+    popup.style.display = "flex";
+
+    // Close popup when clicking the button
+    closeButton.onclick = () => {
+        popup.style.display = "none";
+    };
+
+    // Optional: Close the popup when clicking outside of it
+    window.onclick = (event) => {
+        if (event.target === popup) {
+            popup.style.display = "none";
+        }
+    };
+}
 
 /**
  * Displays a toast message for user feedback.
