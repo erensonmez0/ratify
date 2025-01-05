@@ -46,6 +46,7 @@ To experience **Ratify** seamlessly, follow these steps:
 - **Desktop Users**: 
   Simply open the following link in your web browser for the home page:  
   [Ratify Website](https://erensonmez0.github.io/ratify/pages/index.html)
+  (If the link is required directly: https://erensonmez0.github.io/ratify/pages/index.html)
 
 - **Mobile Users (iOS)**:  
   Due to potential motion sensor limitations on iOS, we recommend using the above link directly in Safari or another browser. The "Surprise Me" feature might require additional permissions, which iOS devices sometimes restrict.
