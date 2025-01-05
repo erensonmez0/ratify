@@ -1,4 +1,10 @@
-//The Predefined top 100 Albums of all time for the "Surprise Me" feature.
+/**
+ * RATIFY APP MAIN SCRIPT
+ * Handles album recommendations, reviews, local storage, and search functionality.
+ * Author: Eren Sönmez
+ */
+
+// Predefined top 100 albums (fetched from Apple Music) for the "Surprise Me" feature
 const albumNames = [
     "Thriller",
     "The Dark Side of the Moon",
@@ -95,6 +101,14 @@ const albumNames = [
     "Hotel California the Eagles",
 ];
 
+// Local storage key names
+const SAVED_ALBUMS_KEY = "savedAlbums";
+const ALBUM_LIBRARY_KEY = "albumLibrary";
+
+/**
+ * Initializes event listeners and detects device type (mobile or desktop).
+ * Handles interactions such as rating stars, detecting device motion, and managing the "Surprise Me" feature.
+ */
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed");
 
@@ -107,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const stars = document.querySelectorAll(".rating-container .star");
 
     stars.forEach((star, index) => {
-        // Highlight stars on hover
         star.addEventListener("mouseenter", () => {
             stars.forEach((s, i) => {
                 if (i <= index) {
@@ -118,12 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Remove hover effect when mouse leaves
         star.addEventListener("mouseleave", () => {
             stars.forEach((s) => s.classList.remove("hover"));
         });
 
-        // Optional: Handle click to make stars "active"
         star.addEventListener("click", () => {
             stars.forEach((s, i) => {
                 s.classList.toggle("active", i <= index);
@@ -136,6 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let albumRecommended = false;
 
+    // Handles "Surprise Me" feature based on device motion for mobile devices.
     if (isMobile && typeof DeviceMotionEvent !== "undefined") {
         console.log("DeviceMotionEvent supported.");
         instruction.textContent = "Tap the button to allow access, then shake your device!";
@@ -174,6 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
         surpriseMeButton.addEventListener("click", surpriseMe);
     }
 
+    /**
+     * Enables shake detection for mobile devices to trigger album recommendations.
+     */
     function enableShakeDetection() {
         console.log("Shake detection enabled.");
         let lastShakeTime = 0;
@@ -217,13 +232,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    /**
+     * Recommends a random album from a predefined list and displays it.
+     * Fetches album details and displays them in the "Recommendation" container.
+     * @returns {Object|null} The recommended album details or null if no recommendation is found.
+     */
     async function surpriseMe() {
         console.log("Surprise Me triggered.");
         
-        // Hide the Surprise Me button
         const surpriseMeButton = document.getElementById("surpriseMeButton");
         if (surpriseMeButton) {
-            surpriseMeButton.style.display = "none"; // Hide the button
+            surpriseMeButton.style.display = "none";
         }
     
         const randomAlbumName = albumNames[Math.floor(Math.random() * albumNames.length)];
@@ -248,12 +267,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
     
-            // Add fade-in class for animation
             const albumElement = document.querySelector(".album-recommendation");
             albumElement.classList.add("fade-in");
-            setTimeout(() => albumElement.classList.remove("fade-in"), 1000); // Remove animation class after 1 second
+            setTimeout(() => albumElement.classList.remove("fade-in"), 1000);
     
-            // Add event listener to the "Add to My List" button
             const addToListButton = document.getElementById("addToListButton");
             addToListButton.addEventListener("click", () => {
                 addToMyList(albumDetails.name, albumDetails.artist, albumDetails.cover);
@@ -281,14 +298,19 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
+const savedAlbums = JSON.parse(localStorage.getItem(SAVED_ALBUMS_KEY)) || [];
 savedAlbums.forEach(album => {
     if (!album.dateAdded) {
-        album.dateAdded = new Date().toISOString(); // Assign a default timestamp
+        album.dateAdded = new Date().toISOString();
     }
 });
-localStorage.setItem("savedAlbums", JSON.stringify(savedAlbums));
+localStorage.setItem(SAVED_ALBUMS_KEY, JSON.stringify(savedAlbums));
 
+/**
+ * Fetches an access token from Spotify's API.
+ * @returns {Promise<string>} The access token for Spotify API requests.
+ * @throws {Error} If the token cannot be retrieved.
+ */
 async function getAccessToken() {
     const clientId = '269e493e4c8142f6974ad609b988648d';
     const clientSecret = 'bacc49ad2afd4b2f883826e0aba08904';
@@ -314,6 +336,11 @@ async function getAccessToken() {
     }
 }
 
+/**
+ * Searches for albums using the Spotify API.
+ * @param {string} query - The search term entered by the user.
+ * @returns {Promise<void>}
+ */
 async function searchAlbum(query) {
     const token = await getAccessToken();
 
@@ -337,11 +364,15 @@ async function searchAlbum(query) {
     }
 }
 
+/**
+ * Displays search results on the page.
+ * @param {Array} albums - The list of albums returned from the Spotify API.
+ */
 function displaySearchResults(albums) {
     const resultsContainer = document.getElementById("searchResults");
     resultsContainer.innerHTML = "";
 
-    const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+    const savedLibrary = JSON.parse(localStorage.getItem(ALBUM_LIBRARY_KEY)) || [];
 
     albums.forEach((album) => {
         const releaseDate = album.release_date ? `(${album.release_date.split('-')[0]})` : "";
@@ -383,29 +414,35 @@ function displaySearchResults(albums) {
     });
 }
 
-
-
+/**
+ * Adds an album to the user's saved list.
+ * @param {string} albumName - The name of the album.
+ * @param {string} artistName - The artist(s) of the album.
+ * @param {string} albumCover - The URL of the album's cover image.
+ */
 function addToMyList(albumName, artistName, albumCover) {
     console.log("Adding album:", albumName, artistName, albumCover); // Debugging
-    const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
+    const savedAlbums = JSON.parse(localStorage.getItem(SAVED_ALBUMS_KEY)) || [];
     const albumExists = savedAlbums.some(album => album.albumName === albumName);
 
     if (!albumExists) {
         savedAlbums.push({ albumName, artistName, albumCover, dateAdded: new Date().toISOString() });
-        localStorage.setItem("savedAlbums", JSON.stringify(savedAlbums));
+        localStorage.setItem(SAVED_ALBUMS_KEY, JSON.stringify(savedAlbums));
         showToast(`${albumName} by ${artistName} has been added to your list!`);
     } else {
         showToast(`${albumName} is already in your list!`);
     }
 }
 
-
+/**
+ * Displays the saved albums on the page.
+ */
 function displaySavedAlbums() {
     const savedList = document.getElementById("savedList");
     const emptyListMessage = document.getElementById("emptyListMessage");
-    const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
+    const savedAlbums = JSON.parse(localStorage.getItem(SAVED_ALBUMS_KEY)) || [];
 
-    savedList.innerHTML = ""; // Clear previous content
+    savedList.innerHTML = "";
 
     if (savedAlbums.length === 0) {
         emptyListMessage.style.display = "flex";
@@ -432,42 +469,39 @@ function displaySavedAlbums() {
 
         // Add click event to open the delete confirmation modal
         albumDiv.addEventListener("click", () => {
-            openAlbumOptions(savedAlbums.indexOf(album)); // Pass the original index of the album
+            openAlbumOptions(savedAlbums.indexOf(album));
         });
 
         savedList.appendChild(albumDiv);
     });
 }
 
-
-
-
-
 document.addEventListener("DOMContentLoaded", displaySavedAlbums);
 
-
+/**
+ * Opens the album options modal and allows users to confirm or cancel album deletion.
+ * @param {number} index - The index of the album to be deleted in the saved albums array.
+ */
 function openAlbumOptions(index) {
     const modal = document.getElementById("confirmationModal");
     const confirmButton = document.getElementById("confirmButton");
     const cancelButton = document.getElementById("cancelButton");
 
-    // Show the modal
     modal.style.display = "flex";
 
     // Handle "Yes" button click
     confirmButton.onclick = () => {
         console.log("Deleting album at index:", index);
-        removeAlbum(index); // Ensure the correct album is removed
-        modal.style.display = "none"; // Close the modal
+        removeAlbum(index);
+        modal.style.display = "none";
         showToast("Album removed successfully!");
     };
 
     // Handle "No" button click
     cancelButton.onclick = () => {
-        modal.style.display = "none"; // Close the modal without action
+        modal.style.display = "none";
     };
 
-    // Close the modal when clicking outside of it
     window.onclick = (event) => {
         if (event.target === modal) {
             modal.style.display = "none";
@@ -475,27 +509,30 @@ function openAlbumOptions(index) {
     };
 }
 
-
-
-
-
+/**
+ * Removes an album from the saved albums list and updates localStorage.
+ * @param {number} index - The index of the album to be removed.
+ */
 function removeAlbum(index) {
-    const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
-    console.log("Removing album at index:", index); // Debugging
-    console.log("Before removal:", savedAlbums); // Debugging
+    const savedAlbums = JSON.parse(localStorage.getItem(SAVED_ALBUMS_KEY)) || [];
+    savedAlbums.splice(index, 1);
 
-    savedAlbums.splice(index, 1); // Remove the selected album
-    console.log("After removal:", savedAlbums); // Debugging
-
-    localStorage.setItem("savedAlbums", JSON.stringify(savedAlbums));
-    displaySavedAlbums(); // Refresh the list
+    localStorage.setItem(SAVED_ALBUMS_KEY, JSON.stringify(savedAlbums));
+    displaySavedAlbums();
     showToast("Album removed successfully!");
 }
 
 let currentAlbum = null;
 
+/**
+ * Opens the review popup for a specific album, allowing users to rate and review the album.
+ * @param {string} albumName - The name of the album to review.
+ * @param {string} albumCover - The URL of the album's cover image.
+ * @param {string} albumYear - The release year of the album.
+ * @param {string|null} [previousReview=null] - The previous review for the album, if available.
+ * @param {number|null} [previousRating=null] - The previous rating for the album, if available.
+ */
 function openReviewPopup(albumName, albumCover, albumYear, previousReview = null, previousRating = null) {
-    // Set current album details
     currentAlbum = { title: albumName, cover: albumCover, year: albumYear };
 
     // Update popup content
@@ -503,23 +540,18 @@ function openReviewPopup(albumName, albumCover, albumYear, previousReview = null
     document.getElementById("albumTitle").textContent = albumName;
     document.getElementById("albumYear").textContent = albumYear;
 
-    // Load previous review or reset textarea
     document.getElementById("reviewText").value = previousReview || "";
 
-    // Reset or load star ratings
     const stars = document.querySelectorAll(".rating-container .star");
     stars.forEach((star, index) => {
         star.classList.toggle("active", previousRating && index < previousRating);
     });
 
-    // Set the current album rating if it exists
     currentAlbum.rating = previousRating || null;
 
-    // Show the popup
     const popup = document.getElementById("reviewPopup");
     popup.style.display = "flex";
 }
-
 
 // Close the review popup when ESC is pressed
 document.addEventListener("keydown", (event) => {
@@ -528,11 +560,18 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
+/**
+ * Closes the review popup.
+ */
 function closeReviewPopup() {
     const popup = document.getElementById("reviewPopup");
     popup.style.display = "none";
 }
 
+/**
+ * Sets the rating for the current album and updates the star UI.
+ * @param {number} rating - The rating value (e.g., 1-5).
+ */
 function setRating(rating) {
     const stars = document.querySelectorAll(".rating-container .star");
     stars.forEach((star, index) => {
@@ -557,12 +596,15 @@ document.querySelectorAll(".rating-container .star").forEach((star, index) => {
     });
 });
 
+/**
+ * Saves a user's review and rating for the current album to localStorage.
+ */
 function saveReview() {
     const reviewText = document.getElementById("reviewText").value.trim();
     const rating = currentAlbum.rating;
 
     if (reviewText && rating) {
-        const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+        const savedLibrary = JSON.parse(localStorage.getItem(ALBUM_LIBRARY_KEY)) || [];
         const existingIndex = savedLibrary.findIndex((album) => album.title === currentAlbum.title);
 
         if (existingIndex !== -1) {
@@ -582,7 +624,7 @@ function saveReview() {
             });
         }
 
-        localStorage.setItem("albumLibrary", JSON.stringify(savedLibrary));
+        localStorage.setItem(ALBUM_LIBRARY_KEY, JSON.stringify(savedLibrary));
         showToast(`Your review for "${currentAlbum.title}" has been saved successfully!`);
         closeReviewPopup();
     } else {
@@ -590,16 +632,18 @@ function saveReview() {
     }
 }
 
-
+/**
+ * Loads the saved albums library and displays it in the UI.
+ */
 function loadAlbumLibrary() {
-    const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+    const savedLibrary = JSON.parse(localStorage.getItem(ALBUM_LIBRARY_KEY)) || [];
     const libraryContainer = document.getElementById("libraryList");
     libraryContainer.innerHTML = "";
 
     savedLibrary.forEach((album, index) => {
         const albumDiv = document.createElement("div");
         albumDiv.classList.add("album-item");
-        albumDiv.setAttribute("data-index", index); // Store the index for identification
+        albumDiv.setAttribute("data-index", index);
 
         albumDiv.innerHTML = `
             <img src="${album.cover}" alt="${album.title}">
@@ -621,47 +665,47 @@ function loadAlbumLibrary() {
     });
 }
 
+/**
+ * Opens a delete confirmation popup for the selected album.
+ * @param {number} index - The index of the album to delete.
+ */
 function openDeletePopup(index) {
     const popup = document.getElementById("deletePopup");
     const confirmDelete = document.getElementById("confirmDelete");
 
-    // Show the delete popup
     popup.style.display = "flex";
-
-    // Add event listener for confirming the deletion
     confirmDelete.onclick = () => deleteReview(index);
 
-    // Close the popup when cancel is clicked
     document.getElementById("cancelDelete").onclick = () => {
         popup.style.display = "none";
     };
 
-    // Close the popup when the close icon is clicked
     document.getElementById("closeDeletePopup").onclick = () => {
         popup.style.display = "none";
     };
 }
 
+/**
+ * Deletes a review from the saved albums library by index and updates the UI.
+ * @param {number} index - The index of the album to delete.
+ */
 function deleteReview(index) {
-    const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+    const savedLibrary = JSON.parse(localStorage.getItem(ALBUM_LIBRARY_KEY)) || [];
 
-    // Remove the album at the specified index
     savedLibrary.splice(index, 1);
+    localStorage.setItem(ALBUM_LIBRARY_KEY, JSON.stringify(savedLibrary));
 
-    // Save the updated library back to localStorage
-    localStorage.setItem("albumLibrary", JSON.stringify(savedLibrary));
-
-    // Refresh the library display
     loadAlbumLibrary();
-
-    // Close the delete popup
     document.getElementById("deletePopup").style.display = "none";
 }
 
 // Ensure the library loads when the page is ready
 document.addEventListener("DOMContentLoaded", loadAlbumLibrary);
 
-
+/**
+ * Handles the album search by validating user input.
+ * Calls `searchAlbum` if the input is valid, or alerts the user otherwise.
+ */
 function handleSearch() {
     const query = document.getElementById("albumSearch").value.trim();
     if (query) {
@@ -679,6 +723,10 @@ document.getElementById("albumSearch").addEventListener("keydown", (event) => {
     }
 });
 
+/**
+ * Displays a toast message for user feedback.
+ * @param {string} message - The message to display in the toast.
+ */
 function showToast(message) {
     const toast = document.getElementById("toast");
     toast.textContent = message;
@@ -689,7 +737,11 @@ function showToast(message) {
     }, 3000);
 }
 
-
+/**
+ * Fetches album details from Spotify API by album name.
+ * @param {string} albumName The name of the album to search for.
+ * @returns A promise that resolves to the album details object or null if not found.
+ */
 async function fetchAlbumDetails(albumName) {
     const token = await getAccessToken();
 

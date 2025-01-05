@@ -1,18 +1,31 @@
+/* Variables */
+:root {
+    --primary-color: #7D83FF;
+    --secondary-color: #009FB7;
+    --background-color: #161B33;
+    --dark-overlay: rgba(0, 0, 0, 0.8);
+    --text-color: #fff;
+    --muted-color: #aaa;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+/* General Styles */
 body {
     font-family: sans-serif, "Consolas";
     margin: 0;
     padding: 0;
     line-height: 1.6;
-    background: linear-gradient(to bottom, #161B33, rgb(0, 0, 0));
+    background: linear-gradient(to bottom, var(--background-color), #000);
     background-repeat: no-repeat;
     background-attachment: fixed;
-    color: #fff;
+    color: var(--text-color);
+    text-align: center;
 }
 
 /* Header */
 header {
-    background-color: linear-gradient(to bottom, #161B33, rgb(0, 0, 0));
-    color: #7D83FF;
+    background-color: linear-gradient(to bottom, var(--background-color), rgb(0, 0, 0));
+    color: var(--primary-color);
     padding: 15px 20px;
     text-align: center;
     border-bottom: 2px solid rgb(0, 0, 0);
@@ -32,11 +45,11 @@ nav ul {
     margin: 0;
     display: flex;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-top: 2px solid #161B33;
+    background-color: var(--shadow-color);
+    border-top: 2px solid var(--background-color);
 
 
-    border-bottom: 2px solid #161B33;
+    border-bottom: 2px solid var(--background-color);
 }
 
 nav ul li {
@@ -44,7 +57,7 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #fff;
+    color: var(--text-color);
     text-decoration: none;
     font-size: 1rem;
     padding: 5px 10px;
@@ -52,54 +65,8 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    background-color: #161B33;
-    color: #7D83FF;
-}
-
-@media (max-width: 768px) {
-    .hamburger-menu {
-        display: block !important;
-    }
-
-    nav {
-        position: fixed;
-        top: 0;
-        left: -100%; /* Hide off-screen initially */
-        width: 55%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
-        transition: left 0.3s ease;
-        z-index: 1500;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 50px;
-    }
-
-    nav.open {
-        left: 0; /* Show menu */
-    }
-
-    nav ul {
-        flex-direction: column;
-        align-items: center;
-        padding: 50px 0;
-    }
-
-    nav ul li {
-        margin: 15px 0;
-    }
-
-    nav ul li a {
-        font-size: 1.2rem;
-    }
-
-    nav ul li a:hover {
-        background-color: #161B33; /* Highlight on hover */
-        color: #7D83FF;
-        border-radius: 5px;
-    }
+    background-color: var(--background-color);
+    color: var(--primary-color);
 }
 
 /* Main Content */
@@ -110,13 +77,13 @@ main {
 section {
     margin-bottom: 40px;
     padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: var(--shadow-color);
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 6px var(--shadow-color);
 }
 
 h2 {
-    color: #7D83FF;
+    color: var(--primary-color);
     font-size: 1.5rem;
     margin-bottom: 15px;
 }
@@ -124,15 +91,15 @@ h2 {
 /* Footer */
 footer {
     text-align: center;
-    background-color: rgb#161B33;
-    color: #aaa;
+    background-color: linear-gradient(to bottom, var(--background-color), #000);
+    color: var(--muted-color);
     padding: 15px 0;
     font-size: 0.9rem;
-    border-top: 2px solid #161B33;
-}
+    border-top: 2px solid var(--background-color);
+}  
 
 footer a {
-    color: #7D83FF;
+    color: var(--primary-color);
     text-decoration: none;
 }
 
@@ -140,6 +107,46 @@ footer a:hover {
     text-decoration: underline;
 }
 
+.background-image-container {
+    position: relative;
+    margin-top: 20px;
+    text-align: center;
+    overflow: hidden; 
+}
+
+.background-image {
+    width: 80%; 
+    height: auto; 
+    margin: 0 auto; 
+    
+    -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
+    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
+    
+    opacity: 0.85;
+
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
+}
+
+/*Hamburger Menu Style*/
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    z-index: 2000;
+}
+
+.hamburger-menu:focus {
+    outline: none;
+}
+
+/* Albums */
 .album {
     text-align: center;
     background-color: rgb(0, 0, 0);
@@ -163,52 +170,55 @@ footer a:hover {
 }
 
 .album p strong {
-    color: #7D83FF;
+    color: var(--primary-color);
 }
 
+/* Search Window Styles */
+
+/* Search Feature */
 .search-container {
-    position: relative; /* Ensure stacking context */
-    z-index: 1; /* Set lower z-index than the popup */
+    position: relative;
+    z-index: 1;
 }
   
   
-  .search-container input {
+.search-container input {
     width: 300px;
     padding: 10px;
-    border: 1px solid #4d519b; /* Use a color that matches your brand's theme */
+    border: 1px solid #4d519b;
     border-radius: 5px;
-    background-color: #161B33; /* Match your site's dark theme */
-    color: #fff; /* Ensure the text is readable */
+    background-color: var(--background-color);
+    color: var(--text-color);
     font-size: 1rem;
-  }
+}
 
-  .search-container input::placeholder {
-    color: #7D83FF; /* Subtle color for the placeholder text */
- }
+.search-container input::placeholder {
+    color: var(--primary-color);
+}
   
-  .search-container button {
+.search-container button {
     padding: 10px 15px;
     margin-left: 10px;
     border: none;
-    background-color: #009FB7;
+    background-color: var(--secondary-color);
     color: white;
     border-radius: 5px;
     cursor: pointer;
-  }
+}
   
   .search-container button:hover {
     background-color: rgb(4, 128, 128);
-  }
+}
 
-
-  .review-popup {
+/* Popup Styles (search.html) */
+.review-popup {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--dark-overlay);
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -252,12 +262,12 @@ footer a:hover {
 }
 
 .rating-container .star.hover {
-    color: #907c0c; /* Gold color for hovered stars */
+    color: #907c0c;
     cursor: pointer;
 }
 
 .rating-container .star.active {
-    color: #ffd700; /* Gold color for clicked stars */
+    color: #ffd700;
     cursor: pointer;
 }
 
@@ -278,17 +288,18 @@ textarea::placeholder {
 }
 
 button {
-    background-color: rgb(2, 173, 173);
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    padding: 10px 15px;
+    font-size: 1.2em;
     cursor: pointer;
-    font-size: 1rem;
+    z-index: 1001;
 }
 
 button:hover {
-    background-color: #31d6d6;
+    background-color: #038da2;
 }
 
 .close-button {
@@ -302,8 +313,8 @@ button:hover {
 }
 
 .close-button:hover {
-    transform: scale(1.1); /* Slight zoom effect on hover */
-    color: rgb(177, 192, 192); /* Teal color for consistency with your theme */
+    transform: scale(1.1);
+    color: rgb(177, 192, 192);
 }
 
 .star.active,
@@ -311,6 +322,7 @@ button:hover {
     color: gold;
 }
 
+/* My List Styles */
 .album-list {
     display: flex;
     flex-wrap: wrap;
@@ -321,31 +333,38 @@ button:hover {
     display: flex;
     align-items: center;
     padding: 40px 0;
-    border-bottom: 1px solid #444; /* Line between reviews */
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .album-item img {
-    width: 150px; /* Adjust size for album covers */
+    width: 150px;
     height: 150px;
     border-radius: 5px;
     margin-right: 20px;
 }
 
+.album-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
 .album-details {
-    text-align: left; /* Aligns text to the left */
+    text-align: left;
     flex: 1;
-    padding-left: 10px; /* Adds a little space between image and text */
+    padding-left: 10px;
 }
 
 .album-details h3 {
     margin-bottom: 8px;
     font-size: 1.2rem;
-    color: #7D83FF; /* Spotify green color for consistency */
+    color: var(--primary-color); 
 }
 
 .album-details .rating {
     font-size: 1rem;
-    color: gold; /* Matches the stars in search */
+    color: gold; 
     margin: 4px 0;
 }
 
@@ -357,7 +376,7 @@ button:hover {
 
 
 .album-details small {
-    color: #aaa;
+    color: var(--muted-color);
     font-size: 0.9rem;
 }
 
@@ -365,30 +384,30 @@ button:hover {
 .album-details .star {
     font-size: 1.5rem;
     color: #555;
-    cursor: default; /* No hover for the stars in the library */
+    cursor: default;
 }
 
 .rating-container .star.active,
 .album-details .star.active {
-    color: #ffd700; /* Gold for active stars */
+    color: #ffd700; 
 }
 
-
+/* Toast effect that appears on top left after a save */
 .toast {
     visibility: hidden;
     min-width: 200px;
-    margin: 10px; /* Adjust margin for top-left positioning */
-    background-color: #009FB7; /* Teal color */
+    margin: 10px; 
+    background-color: var(--secondary-color);
     color: white;
     text-align: center;
     border-radius: 5px;
     padding: 10px;
     position: fixed;
     z-index: 1;
-    top: 10px; /* Position at the top */
-    left: 10px; /* Position at the left */
+    top: 10px;
+    left: 10px;
     font-size: 14px;
-    opacity: 0; /* Start with invisible */
+    opacity: 0;
     transition: opacity 0.8s ease, visibility 0.8s ease;
 }
 
@@ -400,12 +419,12 @@ button:hover {
 
 /* General Popup Styling */
 .popup {
-    background-color: #222; /* Dark background for consistency */
-    color: #fff; /* White text for readability */
-    width: 400px; /* Fixed width for uniformity */
-    border-radius: 8px; /* Rounded corners for smoother appearance */
-    padding: 20px; /* Internal spacing */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
+    background-color: #222;
+    color: var(--text-color);
+    width: 400px;
+    border-radius: 8px; 
+    padding: 20px;
+    box-shadow: 0 4px 10px var(--shadow-color);
     position: fixed;
     top: 50%;
     left: 50%;
@@ -416,34 +435,31 @@ button:hover {
     align-items: center;
 }
 
-/* Image Styling */
 .popup img {
-    max-width: 100%; /* Responsive image */
-    max-height: 200px; /* Limit height */
-    margin-bottom: 15px; /* Space below image */
-    border-radius: 4px; /* Slight rounding for aesthetic */
+    max-width: 100%;
+    max-height: 200px; 
+    margin-bottom: 15px;
+    border-radius: 4px;
 }
 
-/* Cross Icon Styling */
 .popup .close-icon {
     position: absolute;
     top: 10px;
     right: 10px;
-    font-size: 20px; /* Larger for visibility */
-    color: #fff;
-    cursor: pointer; /* Indicates clickable */
-    transition: transform 0.2s ease; /* Hover effect */
+    font-size: 20px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
 
 .popup .close-icon:hover {
-    transform: scale(1.2); /* Enlarge slightly on hover */
-    color: #ff5757; /* Change color for hover feedback */
+    transform: scale(1.2);
+    color: #ff5757;
 }
 
-/* Button Styling */
 .popup button {
-    background-color: #009FB7; /* Blue background for buttons */
-    color: white; /* White text for contrast */
+    background-color: var(--secondary-color);
+    color: white;
     border: none;
     border-radius: 4px;
     padding: 10px 15px;
@@ -454,68 +470,10 @@ button:hover {
 }
 
 .popup button:hover {
-    background-color: #009FB7; /* Darker blue on hover */
+    background-color: #038a9f;
 }
 
-.album-item {
-    cursor: pointer; /* Makes the album clickable */
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.album-item:hover {
-    transform: scale(1.02); /* Slight zoom effect */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
-}
-
-
-#deletePopup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #222;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    color: #fff;
-    width: 300px;
-    text-align: center;
-}
-
-
-#deletePopup .popup-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#deletePopup button {
-    margin: 10px;
-    padding: 10px 20px;
-    border: none;
-    background-color: #009FB7;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#deletePopup button:hover {
-    background-color: #009FB7;
-}
-
-#deletePopup .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: #aaa;
-}
-
-
-/* Modal Background */
+/* Modal Styles */
 .modal {
     display: none;
     position: fixed;
@@ -523,24 +481,22 @@ button:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: var(--dark-overlay);
     z-index: 1000;
     justify-content: center;
     align-items: center;
 }
 
-/* Modal Content */
 .modal-content {
     background-color: #222;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    color: #7D83FF;
+    color: var(--primary-color);
     width: 300px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 10px var(--shadow-color);
 }
 
-/* Modal Buttons */
 .modal-buttons {
     margin-top: 20px;
     display: flex;
@@ -556,12 +512,12 @@ button:hover {
 }
 
 .modal-buttons .confirm {
-    background-color: #009FB7;
+    background-color: var(--secondary-color);
     color: white;
 }
 
 .modal-buttons .confirm:hover {
-    background-color: #009FB7;
+    background-color: var(--secondary-color);
 }
 
 .modal-buttons .cancel {
@@ -573,48 +529,113 @@ button:hover {
     background-color: #333;
 }
 
+#addToListButton {
+    font-size: 1rem;
+    padding: 10px 14px;
+    margin-top: 14px;
+}
 
-/* Album Recommendation Section Styling */
+/* Album Library Styles */
+/* Delete Feature Style */
+#deletePopup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #222;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px var(--shadow-color);
+    z-index: 1000;
+    color: var(--text-color);
+    width: 300px;
+    text-align: center;
+}
+
+#deletePopup .popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#deletePopup button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#deletePopup button:hover {
+    background-color: var(--secondary-color);
+}
+
+#deletePopup .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--muted-color);
+}
+
+.list-empty-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    text-align: center;
+    margin-top: -50px;
+}
+
+/* Surprise Styles */
 .album-recommendation {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: radial-gradient(circle, #0d1021, rgb(0, 0, 0));
-    /*background-color: #000;*/
-    padding: 15px; /* Reduce padding */
-    border-radius: 8px; /* Slightly smaller radius */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Subtle shadow */
-    max-width: 350px; /* Smaller width */
-    margin: 15px auto; /* Center and adjust margin */
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    max-width: 350px;
+    margin: 15px auto;
+    margin-top: 20px;
+    font-size: 1.2em;
+    animation: fadeIn 1s ease-in-out;
 }
 
 .album-recommendation img {
-    width: 90%; /* Make the image smaller */
-    max-width: 250px; /* Limit maximum size */
-    border-radius: 8px; /* Slightly smaller rounding */
-    margin-bottom: 15px; /* Adjust spacing below the image */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Subtle shadow for the image */
+    width: 90%;
+    max-width: 250px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
 }
 
 .album-recommendation h3 {
-    font-size: 1.4rem; /* Smaller title */
-    color: #fff;
-    margin-bottom: 8px; /* Adjust spacing */
+    font-size: 1.4rem;
+    color: var(--text-color);
+    margin-bottom: 8px;
     text-align: center;
 }
 
 .album-recommendation p {
-    font-size: 1rem; /* Reduce paragraph text size */
-    color: #ccc; /* Softer text color */
-    margin: 4px 0; /* Smaller margin */
+    font-size: 1rem;
+    color: #ccc;
+    margin: 4px 0;
     text-align: center;
 }
 
 
 .album-recommendation p:first-of-type {
     font-weight: bold;
-    color: #7D83FF; /* Spotify's green color */
+    color: var(--primary-color);
 }
 
 .album-recommendation p:last-of-type {
@@ -626,7 +647,7 @@ button:hover {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(20px); /* Optional: slide up effect */
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -635,242 +656,82 @@ button:hover {
 }
 
 .fade-in {
-    animation: fadeIn 0.8s ease-in-out; /* Adjust duration and timing as needed */
+    animation: fadeIn 0.8s ease-in-out;
 }
 
-
-/* Default styles for desktop */
-body {
-    font-family: sans-serif, "Consolas";
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-    background: linear-gradient(to bottom, #161B33, rgb(0, 0, 0));
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    color: #fff;
-    text-align: center;
-}
-
-button {
-    background-color: #009FB7;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #009FB7;
-}
-
-.album-recommendation {
-    margin-top: 20px;
-    font-size: 1.2em;
-    animation: fadeIn 1s ease-in-out;
-}
-
-/* Add animation for fade-in effect */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Mobile-specific styles */
+/* Mobile Specific Styles */
 @media (max-width: 768px) {
+    .hamburger-menu {
+        display: block !important;
+    }
+
+    body {
+        background-color: #000;
+    }
+
+    input, button, textarea {
+        font-size: 16px;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 55%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        box-shadow: 2px 0 8px var(--shadow-color);
+        transition: left 0.3s ease;
+        z-index: 1500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
+    }
+
+    nav.open {
+        left: 0;
+    }
+
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 0;
+    }
+
+    nav ul li {
+        margin: 15px 0;
+    }
+
+    nav ul li a {
+        font-size: 1.2rem;
+    }
+
+    nav ul li a:hover {
+        background-color: var(--background-color);
+        color: var(--primary-color);
+        border-radius: 5px;
+    }
+
     #instruction {
         font-size: 1.5em;
-        color: #fff;
+        color: var(--text-color);
     }
 
     #surpriseMeButton {
         display: none; /* Hide the button on mobile */
     }
 
-    body {
-        background-color: #000; /* Different background color for mobile */
-    }
-}
-
-#addToListButton {
-    font-size: 1rem; /* Smaller button text */
-    padding: 10px 14px; /* Reduce padding */
-    margin-top: 14px; /* Adjust spacing above the button */
-}
-
-#editPopup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #222; /* Dark background for consistency */
-    padding: 20px;
-    border-radius: 8px; /* Rounded corners */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Subtle shadow */
-    z-index: 1000;
-    color: #fff; /* White text for readability */
-    width: 400px; /* Fixed width for uniformity */
-    text-align: center; /* Center text alignment */
-}
-
-#editPopup .popup-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#editPopup img {
-    max-width: 150px; /* Limit the album cover size */
-    border-radius: 8px;
-    margin-bottom: 15px; /* Add spacing below the image */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); /* Subtle shadow for the image */
-}
-
-#editPopup h2 {
-    font-size: 1.5rem;
-    margin: 10px 0;
-    color: #7D83FF; /* Spotify green for the title */
-}
-
-#editPopup textarea {
-    width: calc(100% - 20px); /* Adjust width */
-    height: 100px; /* Slightly taller for reviews */
-    background-color: #303030; /* Darker background */
-    border: none;
-    border-radius: 5px;
-    color: #fff; /* White text */
-    padding: 10px;
-    margin-bottom: 15px;
-    resize: none;
-}
-
-#editPopup textarea::placeholder {
-    color: #888; /* Subtle placeholder text */
-}
-
-#editPopup .rating-container {
-    display: flex;
-    justify-content: center;
-    margin: 10px 0;
-}
-
-#editPopup .rating-container .star {
-    font-size: 2rem;
-    color: #555; /* Default star color */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: color 0.3s; /* Smooth color transition */
-}
-
-#editPopup .rating-container .star.active,
-#editPopup .rating-container .star:hover {
-    color: #ffd700; /* Gold for active or hovered stars */
-}
-
-#editPopup button {
-    background-color: rgb(2, 173, 173); /* Teal button color */
-    color: white; /* White text */
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-top: 10px; /* Add space between buttons */
-    width: 100%; /* Full-width buttons */
-}
-
-#editPopup button:hover {
-    background-color: #31d6d6; /* Lighter teal on hover */
-}
-
-#editPopup .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    color: #aaa;
-    transition: color 0.3s;
-}
-
-#editPopup .close:hover {
-    color: #ff5757; /* Red on hover */
-}
-
-.background-image-container {
-    position: relative;
-    margin-top: 20px;
-    text-align: center;
-    overflow: hidden; 
-}
-
-.background-image {
-    width: 80%; 
-    height: auto; 
-    margin: 0 auto; 
-    
-    /* Daha geniş ve belirgin kenar fade efekti */
-    -webkit-mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
-    mask-image: radial-gradient(circle, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 90%);
-    
-    /* Görünümü daha yumuşak hale getirmek için şeffaflık */
-    opacity: 0.85;
-
-    /* Geçiş efektini smooth hale getir */
-    -webkit-mask-composite: destination-in;
-    mask-composite: intersect;
-}
-
-#editPopup {
-    z-index: 1000; /* Ensure it is above other elements */
-    display: flex;
-}
-button {
-    z-index: 1001; /* Ensure buttons are above the popup */
-}
-
-.hamburger-menu {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #fff;
-    cursor: pointer;
-    position: absolute;
-    top: 15px;
-    left: 20px;
-    z-index: 2000;
-}
-
-.hamburger-menu:focus {
-    outline: none;
-}
-
-@media (max-width: 768px) {
-    input, button, textarea {
-        font-size: 16px; /* Set font size to at least 16px to prevent zoom */
-    }
-
-    /* Body background for mobile */
     .home-page {
-        background: #000; /* Matte black */
+        background: #000;
         display: flex;
         flex-direction: column;
         min-height: 100vh;
     }
 
-    /* Header (top part - matte background) */
     .home-page header {
-        background-color: #000; /* Matte black */
-        color: #7D83FF;
+        background-color: #000;
+        color: var(--primary-color);
         padding: 15px 20px;
         text-align: center;
         position: relative;
@@ -887,72 +748,56 @@ button {
         position: relative;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Center vertically */
+        justify-content: center;
         align-items: center;
     }
 
-    
-    /* Matte background for "Welcome to Ratify" text box */
     #welcome {
-        background: rgba(0, 0, 0, 0.751); /* Matte black with transparency */
+        background: rgba(0, 0, 0, 0.751);
         border-radius: 10px;
         padding: 20px;
         text-align: center;
-        color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        margin-top: -70px; /* Adjust this value to move the box up */
+        color: var(--text-color);
+        box-shadow: 0 4px 8px var(--shadow-color);
+        margin-top: -70px;
         position: relative;
     }
 
     .home-page footer {
-        background-color: #000; /* Matte black */
-        color: #7D83FF; /* Match header color */
+        background-color: #000;
+        color: var(--primary-color);
         padding: 10px 20px;
         text-align: center;
-        border-top: 1px solid #7D83FF; /* Subtle separator */
+        border-top: 1px solid var(--primary-color);
         font-size: 0.8rem;
-        flex-shrink: 0; /* Prevent shrinking */
+        flex-shrink: 0;
     }
 
-    /* Ensure text is readable over the background */
     #welcome h2 {
-        color: #7D83FF; /* Matching Ratify brand color */
+        color: var(--primary-color);
     }
 
     /* Adjust spacing to make the layout look clean */
     .home-page .background-image-container {
-        display: none; /* Remove extra desktop-specific background container */
+        display: none;
     }
 
     .search-container {
         display: flex;
-        flex-direction: column; /* Stack items vertically */
-        align-items: center; /* Center align horizontally */
-        gap: 20px; /* Increase the spacing between the input and button */
+        flex-direction: column;
+        align-items: center;
+        gap: 20px; 
     }
 
     .search-container input {
-        width: 80%; /* Keep input field proportional */
-        max-width: 300px; /* Limit max width */
+        width: 80%; 
+        max-width: 300px; 
     }
 
     .search-container button {
-        width: 40%; /* Keep button proportional */
-        max-width: 300px; /* Limit max width */
-        padding: 10px; /* Adjust padding for smaller appearance */
-        font-size: 1rem; /* Keep font size balanced */
+        width: 40%;
+        max-width: 300px;
+        padding: 10px;
+        font-size: 1rem;
     }
 }
-
-.list-empty-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40vh;
-    color: #7D83FF;
-    font-size: 1.5rem;
-    text-align: center;
-    margin-top: -50px;
-}
-
-
