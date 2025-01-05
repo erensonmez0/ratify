@@ -134,6 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
     console.log("Is Mobile Device:", isMobile);
 
+    let albumRecommended = false;
+
     if (isMobile && typeof DeviceMotionEvent !== "undefined") {
         console.log("DeviceMotionEvent supported.");
         instruction.textContent = "Tap the button to allow access, then shake your device!";
@@ -177,6 +179,11 @@ document.addEventListener("DOMContentLoaded", () => {
         let lastShakeTime = 0;
 
         window.addEventListener("devicemotion", (event) => {
+            if (albumRecommended) {
+                console.log("Album already recommended. Shake ignored.");
+                return; // Stop further recommendations
+            }
+
             const acceleration = event.acceleration;
             if (
                 acceleration &&
@@ -196,7 +203,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (now - lastShakeTime > 1000) { // 1-second debounce
                         lastShakeTime = now;
                         console.log("Shake detected!");
-                        surpriseMe();
+
+                        // Trigger recommendation only once
+                        if (!albumRecommended) {
+                            albumRecommended = true; // Set the flag to true
+                            surpriseMe(); // Show the recommendation
+                        }
                     }
                 }
             } else {
