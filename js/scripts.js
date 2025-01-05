@@ -106,118 +106,199 @@ console.log("Delete Review Button:", deleteReviewButton); // Debugging
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded and parsed");
 
+    // Define and initialize variables
+    const editPopup = document.getElementById("editPopup");
+    const closeEditPopupButton = document.getElementById("closeEditPopup");
+    const saveEditButton = document.getElementById("saveEditButton");
+    const deleteReviewButton = document.getElementById("deleteReviewButton");
     const surpriseMeButton = document.getElementById("surpriseMeButton");
     const instruction = document.getElementById("instruction");
+    const searchButton = document.getElementById("searchButton");
+    const albumSearch = document.getElementById("albumSearch");
 
-    if (!instruction) console.error("Instruction element not found.");
-    if (!surpriseMeButton) console.error("Surprise Me button not found.");
-
-    const stars = document.querySelectorAll(".rating-container .star");
-
-    stars.forEach((star, index) => {
-        // Highlight stars on hover
-        star.addEventListener("mouseenter", () => {
-            stars.forEach((s, i) => {
-                if (i <= index) {
-                    s.classList.add("hover");
-                } else {
-                    s.classList.remove("hover");
-                }
-            });
+    // Check for necessary elements and attach event listeners
+    if (saveEditButton) {
+        saveEditButton.addEventListener("click", () => {
+            console.log("Save Changes button clicked");
+            saveChanges();
         });
+    } else {
+        console.error("Save Edit Button not found!");
+    }
 
-        // Remove hover effect when mouse leaves
-        star.addEventListener("mouseleave", () => {
-            stars.forEach((s) => s.classList.remove("hover"));
+    if (deleteReviewButton) {
+        deleteReviewButton.addEventListener("click", () => {
+            console.log("Delete Review button clicked");
+            deleteReview();
         });
+    } else {
+        console.error("Delete Review Button not found!");
+    }
 
-        // Optional: Handle click to make stars "active"
-        star.addEventListener("click", () => {
-            stars.forEach((s, i) => {
-                s.classList.toggle("active", i <= index);
-            });
-        });
+    if (closeEditPopupButton) {
+        closeEditPopupButton.addEventListener("click", closeEditPopup);
+    } else {
+        console.error("Close Edit Popup button not found!");
+    }
 
-        const closeEditPopupButton = document.getElementById("closeEditPopup");
+    if (surpriseMeButton && instruction) {
+        setupSurpriseMeButton(surpriseMeButton, instruction);
+    } else {
+        if (!instruction) console.error("Instruction element not found.");
+        if (!surpriseMeButton) console.error("Surprise Me button not found.");
+    }
 
-        if (!closeEditPopupButton) {
-            console.error("closeEditPopupButton element not found.");
-        } else {
-            // Attach event listener for closing the popup
-            closeEditPopupButton.addEventListener("click", closeEditPopup);
-        }
-    });
-
-    const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
-    console.log("Is Mobile Device:", isMobile);
-
-    if (isMobile && typeof DeviceMotionEvent !== "undefined") {
-        console.log("DeviceMotionEvent supported.");
-        instruction.textContent = "Tap the button to allow access, then shake your device!";
-        surpriseMeButton.style.display = "inline-block"; // Show the button for permission
-
-        surpriseMeButton.addEventListener("click", () => {
-            if (typeof DeviceMotionEvent.requestPermission === "function") {
-                DeviceMotionEvent.requestPermission()
-                    .then((response) => {
-                        if (response === "granted") {
-                            console.log("Motion permission granted!");
-                            enableShakeDetection();
-                            instruction.textContent = "Now shake your device to discover a new album!";
-                            surpriseMeButton.style.display = "none"; // Hide the button after permission
-                        } else {
-                            console.error("Motion permission denied.");
-                            instruction.textContent =
-                                "Motion permission denied. Tap again to retry or use the button.";
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error requesting motion permission:", error);
-                        instruction.textContent =
-                            "Error requesting motion access. Tap the button to retry.";
-                    });
-            } else {
-                console.log("DeviceMotionEvent doesn't require permission.");
-                enableShakeDetection();
-                instruction.textContent = "Now shake your device to discover a new album!";
+    if (searchButton && albumSearch) {
+        searchButton.addEventListener("click", handleSearch);
+        albumSearch.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                handleSearch();
             }
         });
     } else {
-        console.log("DeviceMotionEvent not supported on this device.");
-        instruction.textContent = "Tap the button to discover a new album.";
-        surpriseMeButton.style.display = "inline-block";
-        surpriseMeButton.addEventListener("click", surpriseMe);
+        console.error("Search elements not found!");
     }
 
+    // Initialize the album library
+    loadAlbumLibrary();
+
+    // Add star rating listeners
+    const stars = document.querySelectorAll(".rating-container .star");
+    stars.forEach((star, index) => {
+        star.addEventListener("mouseenter", () => highlightStars(stars, index));
+        star.addEventListener("mouseleave", () => clearStarHighlights(stars));
+        star.addEventListener("click", () => setRating(index + 1));
+    });
+
+    console.log("All event listeners have been set.");
+});
+
+    // Function to highlight stars on hover
+    function highlightStars(stars, index) {
+        stars.forEach((s, i) => {
+            s.classList.toggle("hover", i <= index);
+        });
+    }
+
+    // Function to clear star highlights
+    function clearStarHighlights(stars) {
+        stars.forEach((s) => s.classList.remove("hover"));
+    }
+
+    // Function to set the current rating
+    function setRating(rating) {
+        const stars = document.querySelectorAll(".rating-container .star");
+        stars.forEach((star, index) => {
+            star.classList.toggle("active", index < rating);
+        });
+        if (currentAlbum) currentAlbum.rating = rating;
+    }
+
+    // Function to close the edit popup
+    function closeEditPopup() {
+        const popup = document.getElementById("editPopup");
+        if (popup) {
+            popup.style.display = "none";
+        } else {
+            console.error("Edit Popup element not found!");
+        }
+    }
+
+    // Function to save changes (modify as per your logic)
+    function saveChanges() {
+        const updatedReview = document.getElementById("editReviewText").value.trim();
+        const updatedRating = currentAlbum.rating;
+    
+        if (updatedReview && updatedRating) {
+            const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+            if (currentAlbum.index !== undefined) {
+                savedLibrary[currentAlbum.index] = {
+                    ...savedLibrary[currentAlbum.index],
+                    review: updatedReview,
+                    rating: updatedRating,
+                };
+                localStorage.setItem("albumLibrary", JSON.stringify(savedLibrary));
+                loadAlbumLibrary();
+                closeEditPopup();
+                showToast(`Your review for "${currentAlbum.title}" has been updated.`);
+            } else {
+                console.error("No index found for currentAlbum.");
+            }
+        } else {
+            alert("Please provide both a review and a rating.");
+        }
+    }
+
+    // Function to delete review (modify as per your logic)
+    function deleteReview() {
+        const savedLibrary = JSON.parse(localStorage.getItem("albumLibrary")) || [];
+        if (currentAlbum.index !== undefined) {
+            savedLibrary.splice(currentAlbum.index, 1);
+            localStorage.setItem("albumLibrary", JSON.stringify(savedLibrary));
+            loadAlbumLibrary();
+            closeEditPopup();
+            showToast(`"${currentAlbum.title}" has been deleted.`);
+        } else {
+            console.error("No index found for currentAlbum.");
+        }
+    }
+
+    // Function to set up the Surprise Me button
+    function setupSurpriseMeButton(surpriseMeButton, instruction) {
+        const isMobile = /iPhone|iPad|iPod|Android|Macintosh/i.test(navigator.userAgent);
+        console.log("Is Mobile Device:", isMobile);
+
+        if (isMobile && typeof DeviceMotionEvent !== "undefined") {
+            console.log("DeviceMotionEvent supported.");
+            instruction.textContent = "Tap the button to allow access, then shake your device!";
+            surpriseMeButton.style.display = "inline-block";
+
+            surpriseMeButton.addEventListener("click", () => {
+                if (typeof DeviceMotionEvent.requestPermission === "function") {
+                    DeviceMotionEvent.requestPermission()
+                        .then((response) => {
+                            if (response === "granted") {
+                                console.log("Motion permission granted!");
+                                enableShakeDetection();
+                                instruction.textContent = "Now shake your device to discover a new album!";
+                                surpriseMeButton.style.display = "none";
+                            } else {
+                                console.error("Motion permission denied.");
+                                instruction.textContent = "Permission denied. Tap to retry.";
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error requesting motion permission:", error);
+                            instruction.textContent = "Error requesting motion access. Retry.";
+                        });
+                } else {
+                    enableShakeDetection();
+                    instruction.textContent = "Now shake your device to discover a new album!";
+                }
+            });
+        } else {
+            instruction.textContent = "Tap the button to discover a new album.";
+            surpriseMeButton.addEventListener("click", surpriseMe);
+        }
+    }
+
+    // Function to enable shake detection
     function enableShakeDetection() {
         console.log("Shake detection enabled.");
         let lastShakeTime = 0;
 
         window.addEventListener("devicemotion", (event) => {
             const acceleration = event.acceleration;
-            if (
-                acceleration &&
-                acceleration.x !== null &&
-                acceleration.y !== null &&
-                acceleration.z !== null
-            ) {
-                const totalAcceleration =
-                    Math.abs(acceleration.x) +
-                    Math.abs(acceleration.y) +
-                    Math.abs(acceleration.z);
-
-                console.log("Total Acceleration:", totalAcceleration);
-
-                if (totalAcceleration > 20) { // Shake threshold
+            if (acceleration && acceleration.x && acceleration.y && acceleration.z) {
+                const totalAcceleration = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
+                if (totalAcceleration > 20) {
                     const now = Date.now();
-                    if (now - lastShakeTime > 1000) { // 1-second debounce
+                    if (now - lastShakeTime > 1000) {
                         lastShakeTime = now;
                         console.log("Shake detected!");
                         surpriseMe();
                     }
                 }
-            } else {
-                console.warn("Incomplete acceleration data:", acceleration);
             }
         });
     }
@@ -314,8 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("No index found for currentAlbum.");
         }
     });
-    
-});
+
 
 
 const savedAlbums = JSON.parse(localStorage.getItem("savedAlbums")) || [];
@@ -564,6 +644,10 @@ document.addEventListener("keydown", (event) => {
 
 function closeReviewPopup() {
     const popup = document.getElementById("reviewPopup");
+    if (!popup) {
+        console.error("Review popup not found");
+        return;
+    }
     popup.style.display = "none";
 }
 
@@ -617,8 +701,10 @@ function saveReview() {
         }
 
         localStorage.setItem("albumLibrary", JSON.stringify(savedLibrary));
+        console.log("Saved Library Updated:", savedLibrary); // Debugging
         showToast(`Your review for "${currentAlbum.title}" has been saved successfully!`);
         closeReviewPopup();
+        loadAlbumLibrary(); // Reload library display
     } else {
         alert("Please provide a rating and a review before saving.");
     }
