@@ -822,7 +822,7 @@ button:hover {
 
     /* Section under the header - album collage background */
     .home-page main {
-        background: url('../potentialWallpaper.jpg') no-repeat center center;
+        background: url('../images/mobileBackground.jpg') no-repeat center center;
         background-size: cover;
         flex-grow: 1;
         padding: 20px;
