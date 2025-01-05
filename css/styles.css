@@ -765,3 +765,11 @@ button:hover {
     -webkit-mask-composite: destination-in;
     mask-composite: intersect;
 }
+
+#editPopup {
+    z-index: 1000; /* Ensure it is above other elements */
+    display: flex;
+}
+button {
+    z-index: 1001; /* Ensure buttons are above the popup */
+}

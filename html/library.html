@@ -26,21 +26,13 @@
         <h3>Reviewed Albums:</h3>
         <div id="libraryList"></div>
     </main>
-    <div id="editPopup" class="popup">
+    <div id="deletePopup" class="popup">
         <div class="popup-content">
-            <span id="closeEditPopup" class="close">&times;</span>
-            <img id="editAlbumCover" src="" alt="Album Cover" />
-            <h2 id="editAlbumTitle">Album Title</h2>
-            <div class="rating-container">
-                <span class="star" onclick="setEditRating(1)">&#9733;</span>
-                <span class="star" onclick="setEditRating(2)">&#9733;</span>
-                <span class="star" onclick="setEditRating(3)">&#9733;</span>
-                <span class="star" onclick="setEditRating(4)">&#9733;</span>
-                <span class="star" onclick="setEditRating(5)">&#9733;</span>
-            </div>
-            <textarea id="editReviewText" placeholder="Edit your review here..."></textarea>
-            <button id="saveEditButton">Save Changes</button>
-            <button id="deleteReviewButton" class="delete-button">Delete Review</button> <!-- New Delete Button -->
+            <span id="closeDeletePopup" class="close">&times;</span>
+            <h2>Delete Review</h2>
+            <p>Are you sure you want to delete this review?</p>
+            <button id="confirmDelete">Yes</button>
+            <button id="cancelDelete">No</button>
         </div>
     </div>
     
